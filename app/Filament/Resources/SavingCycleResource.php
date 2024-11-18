@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Enums\TransactionReference;
+use App\Filament\Resources\SavingCycleResource\Pages;
+use App\Filament\Resources\SavingCycleResource\RelationManagers;
+use App\Models\SavingCycle;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Components as AppComponents;
+use Illuminate\Support\Facades\App;
+
+class SavingCycleResource extends Resource
+{
+    protected static ?string $model = SavingCycle::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
+
+    protected static ?string $navigationGroup = 'Finance';
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->columns(3)
+            ->schema([
+                Forms\Components\Group::make([
+                    Forms\Components\Section::make([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(200),
+                        Forms\Components\ToggleButtons::make('reference')
+                            ->options(TransactionReference::class)
+                            ->inline(),
+                    ])->columns(2),
+                    Forms\Components\Section::make([
+                        Forms\Components\DatePicker::make('start_at'),
+                        Forms\Components\DatePicker::make('end_at'),
+                    ])->columns(2),
+                ])->columnSpan(2),
+                Forms\Components\Group::make([
+                    AppComponents\Forms\TimestampPlaceholder::make()
+                ])
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                AppComponents\Columns\IDColumn::make(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('start_at')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('end_at')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('reference')
+                    ->badge()
+                    ->searchable(),
+                AppComponents\Columns\LastModifiedColumn::make(),
+                AppComponents\Columns\CreatedAtColumn::make(),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListSavingCycles::route('/'),
+            'create' => Pages\CreateSavingCycle::route('/create'),
+            'edit' => Pages\EditSavingCycle::route('/{record}/edit'),
+        ];
+    }
+}
