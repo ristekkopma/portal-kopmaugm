@@ -20,7 +20,15 @@ class EventResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-star';
 
-    protected static ?string $navigationGroup = 'Management';
+    public static function getModelLabel(): string
+    {
+        return __('Event');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Management');
+    }
 
     protected static ?string $recordTitleAttribute = 'title';
 
@@ -68,9 +76,6 @@ class EventResource extends Resource
                 Tables\Columns\TextColumn::make('url'),
                 Tables\Columns\TextColumn::make('opened_at'),
                 Tables\Columns\TextColumn::make('closed_at'),
-                Tables\Columns\IconColumn::make('isActive')
-                    ->boolean()
-                    ->alignCenter(),
                 AppComponents\Columns\LastModifiedColumn::make(),
                 AppComponents\Columns\CreatedAtColumn::make(),
 

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique()->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('type')->default('regular');
-            $table->string('recruitment_status')->default('submitted');
+            $table->string('type')->nullable();
+            $table->string('recruitment_status')->nullable();
             $table->boolean('status')->default(false);
             $table->timestamp('registered_at')->nullable();
             $table->timestamp('interview_at')->nullable();

@@ -11,6 +11,6 @@ enum Gender: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return $this->name;
+        return __($this->name);
     }
 }

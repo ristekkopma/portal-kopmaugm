@@ -20,6 +20,7 @@ use App\Filament\Components as AppComponents;
 use App\Filament\Resources\MemberResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\MemberResource\RelationManagers;
+use Filament\Pages\Page;
 
 class MemberResource extends Resource
 {
@@ -27,7 +28,15 @@ class MemberResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shield-check';
 
-    protected static ?string $navigationGroup = 'Membership';
+    public static function getModelLabel(): string
+    {
+        return __('Member');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Membership');
+    }
 
     public static function form(Form $form): Form
     {
@@ -35,7 +44,7 @@ class MemberResource extends Resource
             ->columns(3)
             ->schema([
                 Forms\Components\Group::make([
-                    Forms\Components\Section::make('Membership')
+                    Forms\Components\Section::make(__('Membership'))
                         ->schema([
                             Forms\Components\TextInput::make('code')
                                 ->required()
@@ -84,11 +93,13 @@ class MemberResource extends Resource
                                 ->default(now())
                                 ->seconds(false),
                             Forms\Components\DateTimePicker::make('change_type_at')
-                                ->seconds(false),
+                                ->seconds(false)
+                                ->hiddenOn('create'),
                             Forms\Components\DateTimePicker::make('leave_at')
-                                ->seconds(false),
+                                ->seconds(false)
+                                ->hiddenOn('create'),
                         ])->columns(2),
-                    Forms\Components\Section::make('Credentials')
+                    Forms\Components\Section::make(__('Credentials'))
                         ->relationship('user')
                         ->hiddenOn('create')
                         ->schema([
@@ -98,6 +109,7 @@ class MemberResource extends Resource
                                 ->maxLength(200)
                                 ->columnSpan(2),
                             Forms\Components\TextInput::make('nik')
+                                ->label('NIK')
                                 ->required()
                                 ->maxLength(16),
                             Forms\Components\TextInput::make('email')
@@ -153,12 +165,12 @@ class MemberResource extends Resource
                                 ->maxLength(100),
                             Forms\Components\TextArea::make('address'),
                         ])->columns(2),
-                    Forms\Components\Section::make('Activity')
+                    Forms\Components\Section::make(__('Activity'))
                         ->relationship('profile')
                         ->hiddenOn('create')
                         ->schema([
                             Forms\Components\KeyValue::make('meta.activity')
-                                ->keyLabel('Activity')
+                                ->keyLabel(__('Activity'))
                                 ->valueLabel('Position')
                                 ->addable(),
                         ])
@@ -166,7 +178,7 @@ class MemberResource extends Resource
                 Forms\Components\Group::make([
                     Forms\Components\Section::make([
                         Forms\Components\ToggleButtons::make('status')
-                            ->boolean('Active', 'Inactive')
+                            ->boolean(__('Active'), __('Inactive'))
                             ->inline()
                             ->required(),
                     ]),
@@ -206,9 +218,12 @@ class MemberResource extends Resource
                     ->offIcon('heroicon-s-x-circle')
                     ->onColor('primary')
                     ->offColor('danger'),
+                Tables\Columns\TextColumn::make('user.wallet.balance')
+                    ->label('Balance')
+                    ->money('IDR')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('joined_at')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 AppComponents\Columns\LastModifiedColumn::make(),
                 AppComponents\Columns\CreatedAtColumn::make(),
             ])
@@ -217,7 +232,7 @@ class MemberResource extends Resource
                 Tables\Filters\SelectFilter::make('type')
                     ->options(MemberType::class),
                 Tables\Filters\SelectFilter::make('status')
-                    ->options([true => 'Active', false => 'Inactive']),
+                    ->options([true => __('Active'), false => __('Inactive')]),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -247,7 +262,16 @@ class MemberResource extends Resource
             'index' => Pages\ListMembers::route('/'),
             'create' => Pages\CreateMember::route('/create'),
             'edit' => Pages\EditMember::route('/{record}/edit'),
+            'saving-cycles' => Pages\ManageSavingCycleMembers::route('/{record}/saving-cycles'),
         ];
+    }
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            Pages\EditMember::class,
+            Pages\ManageSavingCycleMembers::class,
+        ]);
     }
 
     public static function getEloquentQuery(): Builder

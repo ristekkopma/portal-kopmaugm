@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SavingCycleUser extends Model
+class SavingCycleMember extends Model
 {
     use SoftDeletes;
 

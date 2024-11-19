@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\MemberStatus;
 use App\Enums\MemberType;
 use App\Enums\RecruitmentStatus;
+use App\Observers\MemberObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy([MemberObserver::class])]
 class Member extends Model
 {
     /** @use HasFactory<\Database\Factories\MembershipFactory> */
@@ -52,14 +55,19 @@ class Member extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function savingCycle(): HasMany
+    public function savingCycleMember(): HasMany
     {
-        return $this->hasMany(SavingCycleUser::class);
+        return $this->hasMany(SavingCycleMember::class);
     }
 
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class, 'user_id', 'user_id');
+    }
+
+    public function savingCycleMembers(): HasMany
+    {
+        return $this->hasMany(SavingCycleMember::class);
     }
 
     public function scopeCandidate(Builder $query): void
@@ -72,5 +80,11 @@ class Member extends Model
     {
         $query->whereNotNull('joined_at')
             ->whereRecruitmentStatus(RecruitmentStatus::Approved);
+    }
+    public function scopeActiveMember(Builder $query): void
+    {
+        $query->whereNotNull('joined_at')
+            ->whereNull('leave_at')
+            ->whereStatus(true);
     }
 }

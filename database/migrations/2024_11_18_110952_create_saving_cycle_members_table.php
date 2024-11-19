@@ -14,7 +14,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('saving_cycle_users', function (Blueprint $table) {
+        Schema::create('saving_cycle_members', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(SavingCycle::class)->constrained()->cascadeOnDelete();

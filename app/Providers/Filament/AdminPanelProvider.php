@@ -87,6 +87,7 @@ class AdminPanelProvider extends PanelProvider
         Forms\Components\Select::configureUsing(fn(Forms\Components\Select $select) => $select->searchable());
 
         Forms\Components\Component::configureUsing(fn(Forms\Components\Component $component) => $component->translateLabel());
+        Tables\Columns\Column::configureUsing(fn(Tables\Columns\Column $column) => $column->translateLabel());
         Tables\Columns\Column::configureUsing(fn(Tables\Columns\Column $column) => $column->placeholder('None')->translateLabel());
         Infolists\Components\Entry::configureUsing(fn(Infolists\Components\Entry $select) => $select->placeholder('Empty')->translateLabel());
 

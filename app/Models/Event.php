@@ -27,18 +27,9 @@ class Event extends Model
         ];
     }
 
-    protected $appends = ['isActive'];
-
     public function scopeActive(Builder $query): void
     {
         $query->where('opened_at', '<=', now())
             ->where('closed_at', '>=', now());
-    }
-
-    protected function isActive(): Attribute
-    {
-        return new Attribute(
-            get: fn(): bool => $this->opened_at <= now() && $this->closed_at >= now(),
-        );
     }
 }

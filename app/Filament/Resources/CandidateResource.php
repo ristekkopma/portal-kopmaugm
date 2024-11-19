@@ -2,29 +2,32 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\CandidateStatus;
-use App\Enums\Gender;
-use App\Enums\Marrital;
-use App\Enums\MemberStatus;
-use App\Enums\MemberType;
-use App\Enums\RecruitmentStatus;
-use App\Enums\Religion;
-use App\Filament\Resources\CandidateResource\Pages;
-use App\Filament\Resources\CandidateResource\RelationManagers;
-use App\Models\Candidate;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Components as AppComponents;
-use App\Models\Member;
 use App\Models\User;
-use Filament\Forms\Components\Actions\Action;
+use Filament\Tables;
+use App\Enums\Gender;
+use App\Models\Member;
+use App\Models\Wallet;
+use App\Enums\Marrital;
+use App\Enums\Religion;
+use Filament\Forms\Form;
+use App\Enums\MemberType;
+use App\Models\Candidate;
+use Filament\Tables\Table;
+use App\Enums\MemberStatus;
+use Illuminate\Support\Str;
+use App\Enums\CandidateStatus;
+use App\Enums\RecruitmentStatus;
+use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Hash;
+use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules\Password;
+use App\Filament\Components as AppComponents;
+use Filament\Forms\Components\Actions\Action;
+use App\Filament\Resources\CandidateResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\CandidateResource\RelationManagers;
 
 class CandidateResource extends Resource
 {
@@ -32,9 +35,15 @@ class CandidateResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Membership';
+    public static function getModelLabel(): string
+    {
+        return __('Candidate');
+    }
 
-    protected static ?string $modelLabel = 'Candidate';
+    public static function getNavigationGroup(): ?string
+    {
+        return __(__('Membership'));
+    }
 
     public static function form(Form $form): Form
     {
@@ -42,7 +51,7 @@ class CandidateResource extends Resource
             ->columns(3)
             ->schema([
                 Forms\Components\Group::make([
-                    Forms\Components\Section::make('Membership')
+                    Forms\Components\Section::make(__('Membership'))
                         ->schema([
                             Forms\Components\Select::make('user_id')
                                 ->relationship('user', 'name')
@@ -87,9 +96,10 @@ class CandidateResource extends Resource
                                 ->default(now())
                                 ->seconds(false),
                             Forms\Components\DateTimePicker::make('interview_at')
-                                ->seconds(false),
+                                ->seconds(false)
+                                ->hiddenOn('create'),
                         ])->columns(2),
-                    Forms\Components\Section::make('Credentials')
+                    Forms\Components\Section::make(__('Credentials'))
                         ->relationship('user')
                         ->hiddenOn('create')
                         ->schema([
@@ -154,12 +164,12 @@ class CandidateResource extends Resource
                                 ->maxLength(100),
                             Forms\Components\TextArea::make('address'),
                         ])->columns(2),
-                    Forms\Components\Section::make('Activity')
+                    Forms\Components\Section::make(__('Activity'))
                         ->relationship('profile')
                         ->hiddenOn('create')
                         ->schema([
                             Forms\Components\KeyValue::make('meta.activity')
-                                ->keyLabel('Activity')
+                                ->keyLabel(__('Activity'))
                                 ->valueLabel('Position')
                                 ->addable(),
                         ])
@@ -226,10 +236,15 @@ class CandidateResource extends Resource
                     ->hidden(fn(Member $record) => $record->recruitment_status === RecruitmentStatus::Approved)
                     ->action(function (?Member $record) {
                         $record->update([
+                            'code' => Str::random(8),
                             'recruitment_status' => RecruitmentStatus::Approved,
                             'status' => true,
                             'joined_at' => now(),
                         ]);
+                        Wallet::create([
+                            'user_id' => $record->user_id
+                        ]);
+                        Notification::make('Candidate has been approved')->success()->send();
                     }),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),

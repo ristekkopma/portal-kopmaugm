@@ -20,7 +20,15 @@ class WalletResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
 
-    protected static ?string $navigationGroup = 'Finance';
+    public static function getModelLabel(): string
+    {
+        return __('Wallet');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Finance');
+    }
 
     public static function form(Form $form): Form
     {
@@ -64,12 +72,7 @@ class WalletResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('balance')
                     ->label('Balance')
-                    ->prefix('Rp ')
-                    ->sortable()
-                    ->searchable()
-                    ->numeric(),
-                Tables\Columns\TextColumn::make('currency')
-                    ->label('Currency')
+                    ->money(fn($record) => $record->currency)
                     ->sortable()
                     ->searchable(),
                 AppComponents\Columns\LastModifiedColumn::make(),
@@ -80,7 +83,6 @@ class WalletResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                 ]),
             ])
@@ -104,8 +106,6 @@ class WalletResource extends Resource
     {
         return [
             'index' => Pages\ListWallets::route('/'),
-            'create' => Pages\CreateWallet::route('/create'),
-            'edit' => Pages\EditWallet::route('/{record}/edit'),
         ];
     }
 

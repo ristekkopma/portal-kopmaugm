@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->timestamp('transacted_at')->nullable();
             $table->foreignIdFor(Wallet::class)->nullable()->constrained()->nullOnDelete();
             $table->boolean('type');
             $table->float('amount')->default(0);

@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Components as AppComponents;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
 
 class SavingCycleResource extends Resource
@@ -22,7 +23,15 @@ class SavingCycleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
 
-    protected static ?string $navigationGroup = 'Finance';
+    public static function getModelLabel(): string
+    {
+        return __('Saving cycle');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Finance');
+    }
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -38,11 +47,14 @@ class SavingCycleResource extends Resource
                             ->maxLength(200),
                         Forms\Components\ToggleButtons::make('reference')
                             ->options(TransactionReference::class)
+                            ->default(TransactionReference::Mandatory)
                             ->inline(),
-                    ])->columns(2),
-                    Forms\Components\Section::make([
                         Forms\Components\DatePicker::make('start_at'),
                         Forms\Components\DatePicker::make('end_at'),
+                        Forms\Components\TextInput::make('default_amount')
+                            ->prefix('Rp')
+                            ->numeric()
+                            ->step(100),
                     ])->columns(2),
                 ])->columnSpan(2),
                 Forms\Components\Group::make([
@@ -54,6 +66,7 @@ class SavingCycleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 AppComponents\Columns\IDColumn::make(),
                 Tables\Columns\TextColumn::make('name')
@@ -86,7 +99,7 @@ class SavingCycleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\SavingCycleMemberRelationManager::class
         ];
     }
 

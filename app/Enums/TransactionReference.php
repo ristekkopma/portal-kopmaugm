@@ -14,9 +14,9 @@ enum TransactionReference: string implements HasLabel, HasColor
     public function getLabel(): string
     {
         return match ($this) {
-            self::Base => 'Base',
-            self::Mandatory => 'Mandatory',
-            self::Voluntary => 'Voluntary',
+            self::Base => __('Base'),
+            self::Mandatory => __('Mandatory'),
+            self::Voluntary => __('Voluntary'),
         };
     }
     public function getColor(): string

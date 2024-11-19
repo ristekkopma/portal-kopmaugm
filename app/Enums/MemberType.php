@@ -13,7 +13,7 @@ enum MemberType: string implements HasLabel
     {
         return match ($this) {
             self::Regular => __('Regular'),
-            self::ExtraOrdinary => __('Extra Ordinary'),
+            self::ExtraOrdinary => __('Extra ordinary'),
         };
     }
 }

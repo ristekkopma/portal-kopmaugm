@@ -16,11 +16,11 @@ enum RecruitmentStatus: string implements HasLabel, HasColor
     public function getLabel(): string
     {
         return match ($this) {
-            self::Submitted => 'Submitted',
-            self::Scheduled => 'Scheduled',
-            self::Interviewed => 'Interviewed',
-            self::Approved => 'Approved',
-            self::Rejected => 'Rejected',
+            self::Submitted => __('Submitted'),
+            self::Scheduled => __('Scheduled'),
+            self::Interviewed => __('Interviewed'),
+            self::Approved => __('Approved'),
+            self::Rejected => __('Rejected'),
         };
     }
 

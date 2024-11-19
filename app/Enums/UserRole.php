@@ -16,11 +16,11 @@ enum UserRole: string implements HasLabel, HasColor
     public function getLabel(): string
     {
         return match ($this) {
-            self::SuperAdmin => 'Super Admin',
-            self::Admin => 'Admin',
-            self::Member => 'Member',
-            self::Candidate => 'Candidate',
-            self::Finance => 'Finance',
+            self::SuperAdmin => __('Super Admin'),
+            self::Admin => __('Admin'),
+            self::Member => __('Member'),
+            self::Candidate => __('Candidate'),
+            self::Finance => __('Finance'),
         };
     }
 

@@ -16,4 +16,9 @@ class EditMember extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    public function getRecordTitle(): string
+    {
+        return $this->record->user->name;
+    }
 }

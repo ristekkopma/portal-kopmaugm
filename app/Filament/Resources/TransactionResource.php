@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Components as AppComponents;
+use Filament\Support\Enums\MaxWidth;
 use Illuminate\Support\Facades\App;
 
 class TransactionResource extends Resource
@@ -22,7 +23,15 @@ class TransactionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-arrows-right-left';
 
-    protected static ?string $navigationGroup = 'Finance';
+    public static function getModelLabel(): string
+    {
+        return __('Transaction');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Finance');
+    }
 
     public static function form(Form $form): Form
     {
@@ -38,7 +47,7 @@ class TransactionResource extends Resource
                             })
                             ->preload(),
                         Forms\Components\ToggleButtons::make('type')
-                            ->boolean('Debit', 'Credit')
+                            ->boolean(__('Debit'), __('Credit'))
                             ->icons(['heroicon-o-minus', 'heroicon-o-plus'])
                             ->inline()
                             ->required(),
@@ -60,6 +69,10 @@ class TransactionResource extends Resource
                     ])
                 ])->columnSpan(2),
                 Forms\Components\Group::make([
+                    Forms\Components\Section::make([
+                        Forms\Components\DateTimePicker::make('transacted_at')
+                            ->default(now())
+                    ]),
                     AppComponents\Forms\TimestampPlaceholder::make(),
                 ])
             ]);
@@ -70,33 +83,33 @@ class TransactionResource extends Resource
         return $table
             ->columns([
                 AppComponents\Columns\IDColumn::make(),
+                Tables\Columns\TextColumn::make('transacted_at')
+                    ->datetime(),
                 Tables\Columns\TextColumn::make('wallet.user.name')
-                    ->label('Wallet name')
+                    ->label('Wallet')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
-                        '0' => 'Credit',
-                        '1' => 'Debit',
+                    ->formatStateUsing(fn(bool $state): string => match ($state) {
+                        true => __('Debit'),
+                        false => __('Credit'),
                     })
                     ->badge(),
                 Tables\Columns\TextColumn::make('amount')
-                    ->prefix('Rp ')
-                    ->numeric()
+                    ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reference')
                     ->badge()
                     ->searchable(),
                 AppComponents\Columns\LastModifiedColumn::make(),
-                AppComponents\Columns\CreatedAtColumn::make()
-                    ->toggleable(isToggledHiddenByDefault: false),
+                AppComponents\Columns\CreatedAtColumn::make(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\ViewAction::make()->modalWidth(MaxWidth::ThreeExtraLarge),
                     Tables\Actions\DeleteAction::make(),
                 ]),
             ])
@@ -121,7 +134,6 @@ class TransactionResource extends Resource
         return [
             'index' => Pages\ListTransactions::route('/'),
             'create' => Pages\CreateTransaction::route('/create'),
-            'edit' => Pages\EditTransaction::route('/{record}/edit'),
         ];
     }
 

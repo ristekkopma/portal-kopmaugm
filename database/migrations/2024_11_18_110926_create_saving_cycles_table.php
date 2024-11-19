@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('start_at')->nullable();
             $table->date('end_at')->nullable();
             $table->string('reference')->nullable();
+            $table->float('default_amount')->default(0);
             $table->timestamps();
         });
     }
