@@ -308,5 +308,11 @@
     "Saving cycle member has been paid": "Anggota siklus simpanan telah dibayar",
     "Payment history": "Riwayat pembayaran simpanan pokok",
     "Unpaid": "Belum dibayar",
-    "From": "Dari"
+    "From": "Dari",
+    "Upcoming events": "Acara yang akan datang",
+    "Join now": "Bergabung sekarang",
+    "Registration closed at :date": "Pendaftaran ditutup pada :date",
+    "Welcome": "Selamat datang",
+    "Please click the button to continue registration": "Silahkan klik tombol untuk melanjutkan pendaftaran",
+    "Complete your profile data": "Lengkapi data profil Anda"
 }

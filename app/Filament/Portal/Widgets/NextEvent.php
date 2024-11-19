@@ -2,6 +2,7 @@
 
 namespace App\Filament\Portal\Widgets;
 
+use App\Enums\UserRole;
 use App\Models\Event;
 use Filament\Widgets\Widget;
 
@@ -18,5 +19,10 @@ class NextEvent extends Widget
     public function mount(): void
     {
         $this->events = Event::active()->get();
+    }
+
+    public static function canView(): bool
+    {
+        return auth()->user()->role !== UserRole::Candidate;
     }
 }

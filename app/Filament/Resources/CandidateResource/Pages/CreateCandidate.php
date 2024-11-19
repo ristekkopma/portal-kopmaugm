@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CandidateResource\Pages;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Filament\Actions;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,10 @@ class CreateCandidate extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
+        User::find($data['user_id'])->update([
+            'role' => UserRole::Candidate,
+        ]);
+
         UserProfile::create([
             'user_id' => $data['user_id'],
         ]);

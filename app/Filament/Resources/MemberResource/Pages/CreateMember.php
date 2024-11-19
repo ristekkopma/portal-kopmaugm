@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\MemberResource\Pages;
 
 use App\Enums\RecruitmentStatus;
+use App\Enums\UserRole;
 use App\Filament\Resources\MemberResource;
+use App\Models\User;
 use App\Models\UserProfile;
 use App\Models\Wallet;
 use Filament\Actions;
@@ -16,6 +18,10 @@ class CreateMember extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
+        User::find($data['user_id'])->update([
+            'role' => UserRole::Member,
+        ]);
+
         UserProfile::create([
             'user_id' => $data['user_id'],
         ]);

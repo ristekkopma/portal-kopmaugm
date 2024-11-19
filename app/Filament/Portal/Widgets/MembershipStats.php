@@ -2,6 +2,7 @@
 
 namespace App\Filament\Portal\Widgets;
 
+use App\Enums\UserRole;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
@@ -27,5 +28,10 @@ class MembershipStats extends BaseWidget
                 ->color('warning')
                 ->chart([7, 2, 10, 3, 15, 4, 17]),
         ];
+    }
+
+    public static function canView(): bool
+    {
+        return auth()->user()->role !== UserRole::Candidate;
     }
 }

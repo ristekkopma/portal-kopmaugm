@@ -2,6 +2,7 @@
 
 namespace App\Filament\Portal\Widgets;
 
+use App\Enums\UserRole;
 use App\Models\Member;
 use App\Models\SavingCycleMember;
 use DragonCode\Contracts\Cashier\Auth\Auth;
@@ -32,5 +33,10 @@ class SavingCycleHistory extends BaseWidget
             ])
             ->paginated([3, 5, 10, 20])
             ->defaultPaginationPageOption(3);
+    }
+
+    public static function canView(): bool
+    {
+        return auth()->user()->role !== UserRole::Candidate;
     }
 }
