@@ -44,7 +44,8 @@ class EventResource extends Resource
                             ->maxLength(200),
                         Forms\Components\FileUpload::make('image')
                             ->image()
-                            ->maxSize(2048),
+                            ->maxSize(2048)
+                            ->imageEditor(),
                         Forms\Components\TextInput::make('url')
                             ->url()
                             ->default('https://')

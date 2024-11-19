@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('images')->nullable();
+            $table->string('image')->nullable();
             $table->string('url')->nullable();
             $table->string('opened_at')->nullable();
             $table->string('closed_at')->nullable();

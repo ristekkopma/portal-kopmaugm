@@ -169,8 +169,9 @@ class CandidateResource extends Resource
                         ->hiddenOn('create')
                         ->schema([
                             Forms\Components\KeyValue::make('meta.activity')
+                                ->label(false)
                                 ->keyLabel(__('Activity'))
-                                ->valueLabel('Position')
+                                ->valueLabel(__('Position'))
                                 ->addable(),
                         ])
                 ])->columnSpan(2),
