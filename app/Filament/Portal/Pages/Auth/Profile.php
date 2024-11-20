@@ -112,7 +112,7 @@ class Profile extends BaseEditProfile
                             Forms\Components\TextInput::make('last_education')
                                 ->required()
                                 ->maxLength(100),
-                            Forms\Components\TextArea::make('address')
+                            Forms\Components\Textarea::make('address')
                                 ->required()
                         ])->columns(2),
                     Forms\Components\Section::make(__('Activity'))

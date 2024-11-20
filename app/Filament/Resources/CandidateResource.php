@@ -162,7 +162,7 @@ class CandidateResource extends Resource
                                 ->maxLength(30),
                             Forms\Components\TextInput::make('last_education')
                                 ->maxLength(100),
-                            Forms\Components\TextArea::make('address'),
+                            Forms\Components\Textarea::make('address'),
                         ])->columns(2),
                     Forms\Components\Section::make(__('Activity'))
                         ->relationship('profile')
