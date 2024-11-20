@@ -5,13 +5,16 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\UserRole;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -55,6 +58,23 @@ class User extends Authenticatable
         ];
     }
 
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'admin') {
+            return true;
+            // return $this->role !== UserRole::Candidate && $this->role !== UserRole::Member;
+        }
+        if ($panel->getId() === 'portal') {
+            return true;
+        }
+        return false;
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar;
+    }
+
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
@@ -72,6 +92,6 @@ class User extends Authenticatable
 
     public function savingCycle(): HasMany
     {
-        return $this->hasMany(SavingCycleUser::class);
+        return $this->hasMany(SavingCycleMember::class);
     }
 }

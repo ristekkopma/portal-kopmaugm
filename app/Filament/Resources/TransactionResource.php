@@ -94,6 +94,10 @@ class TransactionResource extends Resource
                         true => __('Debit'),
                         false => __('Credit'),
                     })
+                    ->color(fn(bool $state): string => match ($state) {
+                        true => 'success',
+                        false => 'warning'
+                    })
                     ->badge(),
                 Tables\Columns\TextColumn::make('amount')
                     ->money('IDR')

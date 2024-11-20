@@ -9,12 +9,12 @@
 
         <div class="absolute inset-x-0 bottom-0 z-10 p-6">
             <!-- Nama Member -->
-            <h2 class="text-base sm:text-2xl font-bold text-white">
+            <h2 class="text-2xl sm:text-2xl font-bold text-white">
                 {{ $user->name }}
             </h2>
 
             <!-- Kode Member -->
-            <p class="text-base sm:text-2xl text-gray-200">
+            <p class="text-2xl sm:text-2xl text-gray-200">
                 {{ $user->member->code }}
             </p>
         </div>

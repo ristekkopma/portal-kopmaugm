@@ -314,5 +314,10 @@
     "Registration closed at :date": "Pendaftaran ditutup pada :date",
     "Welcome": "Selamat datang",
     "Please click the button to continue registration": "Silahkan klik tombol untuk melanjutkan pendaftaran",
-    "Complete your profile data": "Lengkapi data profil Anda"
+    "Complete your profile data": "Lengkapi data profil Anda",
+    "Balance all wallets": "Saldo semua dompet",
+    "Unpaid saving cycle": "Siklus simpanan yang belum dibayar",
+    "arrears": "tunggakan",
+    "Membership chart": "Grafik keanggotaan",
+    "Transaction history chart": "Grafik riwayat transaksi"
 }
