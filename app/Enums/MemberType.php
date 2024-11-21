@@ -12,8 +12,8 @@ enum MemberType: string implements HasLabel
     public function getLabel(): string
     {
         return match ($this) {
-            self::Regular => __('UGM'),
-            self::ExtraOrdinary => __('Non UGM'),
+            self::Regular => __('Mahasiswa UGM'),
+            self::ExtraOrdinary => __('Non Mahasiswa UGM'),
         };
     }
 }
