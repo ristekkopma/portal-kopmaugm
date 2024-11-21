@@ -11,8 +11,8 @@ class CreateSavingCycle extends CreateRecord
 {
     protected static string $resource = SavingCycleResource::class;
 
-    protected function afterCreate(): void
+    protected function getRedirectUrl(): string
     {
-        //
+        return $this->getResource()::getUrl('index');
     }
 }

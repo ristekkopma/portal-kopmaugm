@@ -18,6 +18,7 @@ use App\Enums\MemberStatus;
 use Illuminate\Support\Str;
 use App\Enums\CandidateStatus;
 use App\Enums\RecruitmentStatus;
+use App\Enums\UserRole;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Hash;
 use Filament\Notifications\Notification;
@@ -54,8 +55,9 @@ class CandidateResource extends Resource
                     Forms\Components\Section::make(__('Membership'))
                         ->schema([
                             Forms\Components\Select::make('user_id')
-                                ->relationship('user', 'name')
+                                ->relationship('user', 'name', fn(Builder $query) => $query->whereDoesntHave('member'))
                                 ->preload()
+                                ->placeholder(__('Select user or create new'))
                                 ->required()
                                 ->createOptionForm([
                                     Forms\Components\Group::make([
@@ -64,8 +66,13 @@ class CandidateResource extends Resource
                                             ->minLength(3)
                                             ->maxLength(200),
                                         Forms\Components\TextInput::make('nik')
+                                            ->label('NIK')
+                                            ->unique(ignoreRecord: true)
+                                            ->numeric()
+                                            ->rules(['digits:16'])
                                             ->required()
-                                            ->maxLength(16),
+                                            ->live(onBlur: true)
+                                            ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
                                         Forms\Components\TextInput::make('email')
                                             ->email()
                                             ->required()
@@ -109,8 +116,13 @@ class CandidateResource extends Resource
                                 ->maxLength(200)
                                 ->columnSpan(2),
                             Forms\Components\TextInput::make('nik')
+                                ->label('NIK')
+                                ->unique(ignoreRecord: true)
+                                ->numeric()
+                                ->rules(['digits:16'])
                                 ->required()
-                                ->maxLength(16),
+                                ->live(onBlur: true)
+                                ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->required()
@@ -198,6 +210,7 @@ class CandidateResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 AppComponents\Columns\IDColumn::make(),
                 Tables\Columns\TextColumn::make('user.name')
@@ -234,6 +247,7 @@ class CandidateResource extends Resource
                     ->icon('heroicon-s-check')
                     ->button()
                     ->outlined()
+                    ->requiresConfirmation()
                     ->hidden(fn(Member $record) => $record->recruitment_status === RecruitmentStatus::Approved)
                     ->action(function (?Member $record) {
                         $record->update([
@@ -242,6 +256,9 @@ class CandidateResource extends Resource
                             'status' => true,
                             'joined_at' => now(),
                         ]);
+                        $record->user->role = UserRole::Member;
+                        $record->user->save();
+
                         Wallet::create([
                             'user_id' => $record->user_id
                         ]);

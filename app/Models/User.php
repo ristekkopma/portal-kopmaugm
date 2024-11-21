@@ -90,7 +90,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return $this->hasOne(Wallet::class);
     }
 
-    public function savingCycle(): HasMany
+    public function savingCycleMember(): HasMany
     {
         return $this->hasMany(SavingCycleMember::class);
     }

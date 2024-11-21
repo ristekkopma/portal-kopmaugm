@@ -46,10 +46,13 @@ class UserResource extends Resource
                             ->minLength(3)
                             ->maxLength(200),
                         Forms\Components\TextInput::make('nik')
-                            ->required()
+                            ->label('NIK')
+                            ->unique(ignoreRecord: true)
                             ->numeric()
-                            ->minLength(16)
-                            ->maxLength(16),
+                            ->rules(['digits:16'])
+                            ->required()
+                            ->live(onBlur: true)
+                            ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
                         Forms\Components\TextInput::make('email')
                             ->email()
                             ->required()
@@ -99,6 +102,7 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 AppComponents\Columns\IDColumn::make(),
                 Tables\Columns\TextColumn::make('name')

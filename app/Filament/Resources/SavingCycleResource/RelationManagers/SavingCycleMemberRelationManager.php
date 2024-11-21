@@ -27,27 +27,16 @@ class SavingCycleMemberRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->disabled()
+                    ->preload()
+                    ->relationship('user', 'name', fn(Builder $query) => $query->whereDoesntHave('savingCycleMember', fn(Builder $query) => $query->where('saving_cycle_id', $this->getOwnerRecord()->id)))
                     ->required(),
-                Forms\Components\Select::make('member_id')
-                    ->relationship('member', 'code')
-                    ->label('NAK')
-                    ->disabled()
-                    ->required(),
-                Forms\Components\TextInput::make('amount')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\DatePicker::make('paid_off_at'),
-                Forms\Components\Textarea::make('note')
-                    ->columnSpanFull(),
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('user.name')
+            ->recordTitleAttribute('user_id')
             ->heading(__('Saving cycle member'))
             ->columns([
                 Tables\Columns\TextColumn::make('member.code')
@@ -69,10 +58,16 @@ class SavingCycleMemberRelationManager extends RelationManager
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\TernaryFilter::make('paid_off_at')
+                    ->label('Payment')
+                    ->trueLabel(__('Paid'))
+                    ->falseLabel(__('Unpaid'))
+                    ->nullable(),
             ])
             ->headerActions([])
             ->actions([
                 Tables\Actions\Action::make('pay')
+                    ->label(__('Pay'))
                     ->button()
                     ->icon('heroicon-s-credit-card')
                     ->outlined()
@@ -104,6 +99,9 @@ class SavingCycleMemberRelationManager extends RelationManager
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                 ]),
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

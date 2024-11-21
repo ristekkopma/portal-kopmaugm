@@ -18,7 +18,8 @@ class CreateMember extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        User::find($data['user_id'])->update([
+        $user = User::find($data['user_id']);
+        $user->update([
             'role' => UserRole::Member,
         ]);
 
@@ -28,10 +29,17 @@ class CreateMember extends CreateRecord
         $data['recruitment_status'] = RecruitmentStatus::Approved;
         $data['joined_at'] = now();
 
-        Wallet::create([
-            'user_id' => $data['user_id'],
-        ]);
+        if ($user->doesntHave('wallet')) {
+            Wallet::create([
+                'user_id' => $data['user_id'],
+            ]);
+        }
 
         return parent::handleRecordCreation($data);
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

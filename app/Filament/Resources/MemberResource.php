@@ -51,7 +51,7 @@ class MemberResource extends Resource
                                 ->maxLength(255),
                             Forms\Components\Select::make('user_id')
                                 ->disabledOn('edit')
-                                ->relationship('user', 'name')
+                                ->relationship('user', 'name', fn(Builder $query) => $query->whereDoesntHave('member'))
                                 ->preload()
                                 ->required()
                                 ->createOptionForm([
@@ -61,8 +61,13 @@ class MemberResource extends Resource
                                             ->minLength(3)
                                             ->maxLength(200),
                                         Forms\Components\TextInput::make('nik')
+                                            ->label('NIK')
+                                            ->unique(ignoreRecord: true)
+                                            ->numeric()
+                                            ->rules(['digits:16'])
                                             ->required()
-                                            ->maxLength(16),
+                                            ->live(onBlur: true)
+                                            ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
                                         Forms\Components\TextInput::make('email')
                                             ->email()
                                             ->required()
@@ -110,8 +115,12 @@ class MemberResource extends Resource
                                 ->columnSpan(2),
                             Forms\Components\TextInput::make('nik')
                                 ->label('NIK')
+                                ->unique(ignoreRecord: true)
+                                ->numeric()
+                                ->rules(['digits:16'])
                                 ->required()
-                                ->maxLength(16),
+                                ->live(onBlur: true)
+                                ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->required()
@@ -198,6 +207,7 @@ class MemberResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 AppComponents\Columns\IDColumn::make(),
                 Tables\Columns\TextColumn::make('code')

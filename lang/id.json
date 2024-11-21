@@ -316,8 +316,11 @@
     "Please click the button to continue registration": "Silahkan klik tombol untuk melanjutkan pendaftaran",
     "Complete your profile data": "Lengkapi data profil Anda",
     "Balance all wallets": "Saldo semua dompet",
-    "Unpaid saving cycle": "Siklus simpanan yang belum dibayar",
+    "Unpaid saving cycles": "Siklus simpanan yang belum dibayar",
     "arrears": "tunggakan",
     "Membership chart": "Grafik keanggotaan",
-    "Transaction history chart": "Grafik riwayat transaksi"
+    "Transaction history chart": "Grafik riwayat transaksi",
+    "Pay":"Bayar",
+    "Total members": "Total anggota",
+    "Select user or create new": "Pilih pengguna atau buat baru"
 }

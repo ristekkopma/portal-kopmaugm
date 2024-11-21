@@ -18,8 +18,12 @@ class Register extends Page
                 $this->getNameFormComponent(),
                 Forms\Components\TextInput::make('nik')
                     ->label('NIK')
+                    ->unique(ignoreRecord: true)
+                    ->numeric()
+                    ->rules(['digits:16'])
                     ->required()
-                    ->maxLength(16),
+                    ->live(onBlur: true)
+                    ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
                 $this->getEmailFormComponent(),
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),

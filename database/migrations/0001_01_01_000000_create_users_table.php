@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('nik')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone')->unique()->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('avatar')->nullable();
             $table->string('role')->nullable();
             $table->rememberToken();
