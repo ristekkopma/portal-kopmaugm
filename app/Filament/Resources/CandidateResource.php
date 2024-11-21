@@ -56,6 +56,7 @@ class CandidateResource extends Resource
                         ->schema([
                             Forms\Components\Select::make('user_id')
                                 ->relationship('user', 'name', fn(Builder $query) => $query->whereDoesntHave('member'))
+                                ->getOptionLabelUsing(fn($value) => User::find($value)?->name ?? $value)
                                 ->preload()
                                 ->placeholder(__('Select user or create new'))
                                 ->required()

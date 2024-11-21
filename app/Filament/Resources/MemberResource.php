@@ -20,6 +20,7 @@ use App\Filament\Components as AppComponents;
 use App\Filament\Resources\MemberResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\MemberResource\RelationManagers;
+use App\Models\User;
 use Filament\Pages\Page;
 
 class MemberResource extends Resource
@@ -51,8 +52,10 @@ class MemberResource extends Resource
                                 ->maxLength(255),
                             Forms\Components\Select::make('user_id')
                                 ->disabledOn('edit')
-                                ->relationship('user', 'name', fn(Builder $query) => $query->whereDoesntHave('member'))
+                                ->relationship('user', 'name', fn(Builder $query) => $query->doesntHave('member'))
+                                ->getOptionLabelUsing(fn($value) => User::find($value)?->name ?? $value)
                                 ->preload()
+                                ->placeholder(__('Select user or create new'))
                                 ->required()
                                 ->createOptionForm([
                                     Forms\Components\Group::make([
@@ -274,6 +277,7 @@ class MemberResource extends Resource
             'create' => Pages\CreateMember::route('/create'),
             'edit' => Pages\EditMember::route('/{record}/edit'),
             'saving-cycles' => Pages\ManageSavingCycleMembers::route('/{record}/saving-cycles'),
+            'transactions' => Pages\ManageTransactions::route('/{record}/transactions'),
         ];
     }
 
@@ -282,6 +286,7 @@ class MemberResource extends Resource
         return $page->generateNavigationItems([
             Pages\EditMember::class,
             Pages\ManageSavingCycleMembers::class,
+            Pages\ManageTransactions::class,
         ]);
     }
 

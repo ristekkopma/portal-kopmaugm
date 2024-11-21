@@ -56,7 +56,11 @@ class ManageSavingCycleMembers extends ManageRelatedRecords
                     ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->money('IDR'),
-                Tables\Columns\TextColumn::make('paid_off_at'),
+                Tables\Columns\TextColumn::make('paid_off_at')
+                    ->label(__('Status'))
+                    ->formatStateUsing(fn($state) => $state ? __('Paid') : __('Unpaid'))
+                    ->badge()
+                    ->description(fn($state) => $state ? $state : null),
             ])
             ->actions([
                 Tables\Actions\Action::make('pay')
