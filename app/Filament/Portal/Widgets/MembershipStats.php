@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 class MembershipStats extends BaseWidget
 {
     protected static ?int $sort = 4;
+
+    protected static ?string $pollingInterval = '60s';
+
     protected function getStats(): array
     {
         return [

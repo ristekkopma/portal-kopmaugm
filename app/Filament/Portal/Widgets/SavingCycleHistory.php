@@ -22,14 +22,18 @@ class SavingCycleHistory extends BaseWidget
     {
         return $table
             ->query(
-                SavingCycleMember::query()->whereBelongsTo(auth()->user())
+                SavingCycleMember::query()->whereBelongsTo(auth()->user())->orderBy('created_at', 'desc')
             )
             ->columns([
                 Tables\Columns\TextColumn::make('savingCycle.name'),
-                Tables\Columns\TextColumn::make('amount'),
+                Tables\Columns\TextColumn::make('amount')
+                    ->money('IDR'),
                 Tables\Columns\TextColumn::make('paid_off_at')
-                    ->date()
-                    ->placeholder(__('Unpaid')),
+                    ->label(__('Status'))
+                    ->formatStateUsing(fn($state) => $state !== null ? __('Paid') : __('Unpaid'))
+                    ->badge()
+                    ->placeholder(__('Unpaid'))
+                    ->description(fn($state) => $state ? $state : null),
             ])
             ->paginated([3, 5, 10, 20])
             ->defaultPaginationPageOption(3);

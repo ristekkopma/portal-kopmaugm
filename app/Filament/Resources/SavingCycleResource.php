@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Components as AppComponents;
+use Filament\Support\RawJs;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
 
@@ -53,7 +54,12 @@ class SavingCycleResource extends Resource
                         Forms\Components\DatePicker::make('end_at'),
                         Forms\Components\TextInput::make('default_amount')
                             ->prefix('Rp')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->stripCharacters(',')
                             ->numeric()
+                            ->required()
+                            ->required()
+                            ->minValue(0)
                             ->step(100),
                     ])->columns(2),
                 ])->columnSpan(2),

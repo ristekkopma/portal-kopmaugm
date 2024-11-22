@@ -23,7 +23,7 @@ class Register extends Page
                     ->rules(['digits:16'])
                     ->required()
                     ->live(onBlur: true)
-                    ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
+                    ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
                 $this->getEmailFormComponent(),
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),

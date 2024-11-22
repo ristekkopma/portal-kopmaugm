@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Portal\Resources;
 
 use App\Enums\TransactionReference;
-use App\Filament\Resources\TransactionResource\Pages;
-use App\Filament\Resources\TransactionResource\RelationManagers;
+use App\Filament\Portal\Resources\TransactionResource\Pages;
+use App\Filament\Portal\Resources\TransactionResource\RelationManagers;
 use App\Models\Transaction;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -14,10 +14,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Components as AppComponents;
-use App\Models\Wallet;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Support\RawJs;
-use Illuminate\Support\Facades\App;
 
 class TransactionResource extends Resource
 {
@@ -28,11 +26,6 @@ class TransactionResource extends Resource
     public static function getModelLabel(): string
     {
         return __('Transaction');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Finance');
     }
 
     public static function form(Form $form): Form
@@ -116,17 +109,10 @@ class TransactionResource extends Resource
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
-                Tables\Filters\SelectFilter::make('wallet_id')
-                    ->relationship('wallet', 'id', fn(Builder $query) => $query->orderBy('created_at', 'desc'))
-                    ->getOptionLabelFromRecordUsing(function ($record) {
-                        return $record->user->name;
-                    })
-                    ->label(__('Wallet')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make()->modalWidth(MaxWidth::ThreeExtraLarge),
-                    Tables\Actions\DeleteAction::make(),
                 ]),
             ])
             ->bulkActions([
@@ -149,13 +135,13 @@ class TransactionResource extends Resource
     {
         return [
             'index' => Pages\ListTransactions::route('/'),
-            'create' => Pages\CreateTransaction::route('/create'),
         ];
     }
 
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->whereBelongsTo(auth()->user()->wallet)
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

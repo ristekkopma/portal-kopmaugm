@@ -11,7 +11,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Components as AppComponents;
 use App\Models\Transaction;
+use App\Models\User;
+use Filament\Forms\FormsComponent;
 use Filament\Notifications\Notification;
+use Filament\Support\RawJs;
 
 class SavingCycleMemberRelationManager extends RelationManager
 {
@@ -27,9 +30,29 @@ class SavingCycleMemberRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
+                    ->label('Member')
                     ->preload()
                     ->relationship('user', 'name', fn(Builder $query) => $query->whereDoesntHave('savingCycleMember', fn(Builder $query) => $query->where('saving_cycle_id', $this->getOwnerRecord()->id)))
+                    ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn($state, Forms\Set $set) => $set('member_id', User::find($state)->member->id)),
+                Forms\Components\Select::make('member_id')
+                    ->label('Code')
+                    ->relationship('member', 'code')
+                    ->disabled()
+                    ->dehydrated(true)
                     ->required(),
+                Forms\Components\TextInput::make('amount')
+                    ->prefix('Rp')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->numeric()
+                    ->required()
+                    ->required()
+                    ->minValue(0)
+                    ->step(100),
+                Forms\Components\Textarea::make('note'),
+
             ]);
     }
 
@@ -48,8 +71,10 @@ class SavingCycleMemberRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('amount')
                     ->money('IDR'),
                 Tables\Columns\TextColumn::make('paid_off_at')
-                    ->datetime()
-                    ->sortable(),
+                    ->label(__('Status'))
+                    ->formatStateUsing(fn($state) => $state ? __('Paid') : __('Unpaid'))
+                    ->badge()
+                    ->description(fn($state) => $state ? $state : null),
                 Tables\Columns\TextColumn::make('note')
                     ->wrap()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -68,8 +68,11 @@ class Profile extends BaseEditProfile
                                 ->rules(['digits:16'])
                                 ->required()
                                 ->live(onBlur: true)
-                                ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
-                            $this->getEmailFormComponent(),
+                                ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
+                            $this->getEmailFormComponent()
+                                ->disabled()
+                                ->suffixIcon('heroicon-s-lock-closed')
+                                ->hint(__('Diverifikasi pada :date', ['date' => $this->getUser()->email_verified_at->format('d M Y')])),
                             Forms\Components\TextInput::make('phone')
                                 ->tel()
                                 ->maxLength(15),

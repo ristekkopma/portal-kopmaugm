@@ -12,6 +12,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class MemberStats extends BaseWidget
 {
+    protected static ?string $pollingInterval = '60s';
+
     protected function getStats(): array
     {
         return [
@@ -52,12 +54,12 @@ class MemberStats extends BaseWidget
 
     public function redirectToIndexMember()
     {
-        return redirect()->route('filament.admin.resources.member.index');
+        return redirect()->route('filament.admin.resources.members.index');
     }
     public function redirectToIndexWallet()
     {
 
-        return redirect()->route('filament.admin.resources.wallet.index');
+        return redirect()->route('filament.admin.resources.wallets.index');
     }
     public function redirectToIndexSavingCycle()
     {

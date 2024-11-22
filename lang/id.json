@@ -322,5 +322,9 @@
     "Transaction history chart": "Grafik riwayat transaksi",
     "Pay":"Bayar",
     "Total members": "Total anggota",
-    "Select user or create new": "Pilih pengguna atau buat baru"
+    "Select user or create new": "Pilih pengguna atau buat baru",
+    "Unpaid saving cycle": "Siklus simpanan yang belum dibayar",
+    "Paid": "Dibayar",
+    "Currently": "Saat ini",
+    "Person": "orang"
 }

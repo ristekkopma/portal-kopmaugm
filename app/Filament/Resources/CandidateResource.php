@@ -73,7 +73,7 @@ class CandidateResource extends Resource
                                             ->rules(['digits:16'])
                                             ->required()
                                             ->live(onBlur: true)
-                                            ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
+                                            ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
                                         Forms\Components\TextInput::make('email')
                                             ->email()
                                             ->required()
