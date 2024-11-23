@@ -70,6 +70,11 @@ class Member extends Model
         return $this->hasOne(Wallet::class, 'user_id', 'user_id');
     }
 
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
+    }
+
     public function savingCycleMembers(): HasMany
     {
         return $this->hasMany(SavingCycleMember::class);

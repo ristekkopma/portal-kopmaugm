@@ -335,5 +335,10 @@
     "Administration": "Administrasi",
     "Work": "Pekerjaan",
     "Description": "Deskripsi",
-    "Payment method": "Metode pembayaran"
+    "Payment method": "Metode pembayaran",
+    "Owner": "Pemilik",
+    "Documents": "Dokumen",
+    "Document": "Dokumen",
+    "Kopma document": "Dokumen KOPMA",
+    "Member document": "Dokumen anggota"
 }

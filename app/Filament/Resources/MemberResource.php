@@ -285,6 +285,7 @@ class MemberResource extends Resource
             'edit' => Pages\EditMember::route('/{record}/edit'),
             'saving-cycles' => Pages\ManageSavingCycleMembers::route('/{record}/saving-cycles'),
             'transactions' => Pages\ManageTransactions::route('/{record}/transactions'),
+            'documents' => Pages\ManageDocuments::route('/{record}/documents'),
         ];
     }
 
@@ -294,6 +295,7 @@ class MemberResource extends Resource
             Pages\EditMember::class,
             Pages\ManageSavingCycleMembers::class,
             Pages\ManageTransactions::class,
+            Pages\ManageDocuments::class,
         ]);
     }
 
