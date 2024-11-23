@@ -17,6 +17,7 @@ use App\Filament\Components as AppComponents;
 use App\Models\Wallet;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Support\RawJs;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 
 class TransactionResource extends Resource
@@ -92,6 +93,7 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('transacted_at')
                     ->datetime('d F Y H:i'),
                 Tables\Columns\TextColumn::make('wallet.user.name')
+                    ->description(fn(?Model $record) => $record->wallet->user->member->code)
                     ->label('Wallet')
                     ->numeric()
                     ->sortable(),
@@ -118,9 +120,12 @@ class TransactionResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('wallet_id')
                     ->relationship('wallet', 'id', fn(Builder $query) => $query->orderBy('created_at', 'desc'))
+                    ->getSearchResultsUsing(fn($query, $search) => $query->where('user.name', 'like', "%{$search}%"))
                     ->getOptionLabelFromRecordUsing(function ($record) {
-                        return $record->user->name;
+                        return $record->user->name . '-' . $record->user->member->code;
                     })
+                    ->searchable()
+                    ->preload()
                     ->label(__('Wallet')),
             ])
             ->actions([

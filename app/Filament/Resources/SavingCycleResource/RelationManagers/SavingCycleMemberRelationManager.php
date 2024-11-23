@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Components as AppComponents;
 use App\Models\Transaction;
 use App\Models\User;
+use DragonCode\Contracts\Cashier\Resources\Model;
 use Filament\Forms\FormsComponent;
 use Filament\Notifications\Notification;
 use Filament\Support\RawJs;
@@ -34,6 +35,7 @@ class SavingCycleMemberRelationManager extends RelationManager
                     ->preload()
                     ->relationship('user', 'name', fn(Builder $query) => $query->whereDoesntHave('savingCycleMember', fn(Builder $query) => $query->where('saving_cycle_id', $this->getOwnerRecord()->id)))
                     ->required()
+                    ->getOptionLabelFromRecordUsing(fn($record) => $record->user->name)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn($state, Forms\Set $set) => $set('member_id', User::find($state)->member->id)),
                 Forms\Components\Select::make('member_id')
@@ -46,13 +48,13 @@ class SavingCycleMemberRelationManager extends RelationManager
                     ->prefix('Rp')
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
+                    ->default(fn() => $this->getOwnerRecord()->default_amount)
                     ->numeric()
                     ->required()
                     ->required()
                     ->minValue(0)
                     ->step(100),
                 Forms\Components\Textarea::make('note'),
-
             ]);
     }
 
@@ -107,7 +109,7 @@ class SavingCycleMemberRelationManager extends RelationManager
                     ->hidden(fn($record) => $record->paid_off_at)
                     ->requiresConfirmation()
                     ->modalHeading(fn($record) => __('Pay for ') . $record->user->name)
-                    ->modalDescription(fn($record) => __('Create new transaction with amount ') . $record->amount)
+                    ->modalDescription(fn($record) => __('Create new transaction with amount ') . 'Rp ' . number_format($record->amount, 0, '', '.') . ' for ' . $record->savingCycle->name)
                     ->action(function ($record) {
                         $transaction = new Transaction;
 
@@ -129,7 +131,6 @@ class SavingCycleMemberRelationManager extends RelationManager
                             ->send();
                     }),
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                 ]),
             ])
