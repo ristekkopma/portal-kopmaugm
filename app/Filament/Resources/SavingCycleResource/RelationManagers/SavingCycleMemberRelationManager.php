@@ -35,7 +35,6 @@ class SavingCycleMemberRelationManager extends RelationManager
                     ->preload()
                     ->relationship('user', 'name', fn(Builder $query) => $query->whereDoesntHave('savingCycleMember', fn(Builder $query) => $query->where('saving_cycle_id', $this->getOwnerRecord()->id)))
                     ->required()
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->user->name)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn($state, Forms\Set $set) => $set('member_id', User::find($state)->member->id)),
                 Forms\Components\Select::make('member_id')

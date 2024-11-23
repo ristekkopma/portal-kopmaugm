@@ -39,6 +39,7 @@ return new class extends Migration
             $table->string('faculty')->nullable();
             $table->string('major')->nullable();
             $table->string('nim')->nullable();
+            $table->string('work')->nullable();
             $table->string('last_education')->nullable();
             $table->text('address')->nullable();
             $table->json('meta')->nullable();

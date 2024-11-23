@@ -117,6 +117,9 @@ class Profile extends BaseEditProfile
                                 ->required()
                                 ->numeric()
                                 ->maxLength(30),
+                            Forms\Components\TextInput::make('work')
+                                ->required()
+                                ->maxLength(100),
                             Forms\Components\TextInput::make('last_education')
                                 ->required()
                                 ->maxLength(100),

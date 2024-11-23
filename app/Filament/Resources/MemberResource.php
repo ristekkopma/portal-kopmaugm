@@ -174,6 +174,8 @@ class MemberResource extends Resource
                                 ->label('NIM')
                                 ->numeric()
                                 ->maxLength(30),
+                            Forms\Components\TextInput::make('work')
+                                ->maxLength(100),
                             Forms\Components\TextInput::make('last_education')
                                 ->maxLength(100),
                             Forms\Components\Textarea::make('address'),

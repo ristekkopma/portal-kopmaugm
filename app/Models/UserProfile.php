@@ -24,6 +24,7 @@ class UserProfile extends Model
         'faculty',
         'major',
         'nim',
+        'work',
         'last_education',
         'address',
         'meta'
