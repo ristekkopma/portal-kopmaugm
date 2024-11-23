@@ -105,6 +105,8 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('reference')
                     ->badge()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->badge(),
                 AppComponents\Columns\LastModifiedColumn::make(),
                 AppComponents\Columns\CreatedAtColumn::make(),
             ])

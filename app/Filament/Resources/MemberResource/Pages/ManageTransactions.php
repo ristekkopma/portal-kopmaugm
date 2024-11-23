@@ -45,7 +45,12 @@ class ManageTransactions extends ManageRelatedRecords
     {
         return $table
             ->recordTitleAttribute('amount')
+            ->defaultSort('transacted_at', 'desc')
             ->columns([
+                Tables\Columns\TextColumn::make('transacted_at')
+                    ->sortable()
+                    ->searchable()
+                    ->dateTime('d F Y H:i'),
                 Tables\Columns\TextColumn::make('type')
                     ->formatStateUsing(fn(bool $state): string => match ($state) {
                         true => __('Debit'),
@@ -61,10 +66,8 @@ class ManageTransactions extends ManageRelatedRecords
                     ->money('IDR'),
                 Tables\Columns\TextColumn::make('reference')
                     ->badge(),
-                Tables\Columns\TextColumn::make('transacted_at')
-                    ->sortable()
-                    ->searchable()
-                    ->dateTime('d F Y H:i'),
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->badge(),
             ])
             ->filters([
                 //

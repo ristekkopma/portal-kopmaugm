@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MemberResource\Pages;
 
+use App\Enums\PaymentMethod;
 use App\Filament\Resources\MemberResource;
 use App\Models\SavingCycleMember;
 use App\Models\Transaction;
@@ -51,6 +52,7 @@ class ManageSavingCycleMembers extends ManageRelatedRecords
         return $table
             ->checkIfRecordIsSelectableUsing(fn(SavingCycleMember $record) => is_null($record->paid_off_at))
             ->recordTitleAttribute('savingCycle.name')
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('savingCycle.name')
                     ->searchable(),
@@ -64,15 +66,17 @@ class ManageSavingCycleMembers extends ManageRelatedRecords
                     ->description(fn($state) => $state ? $state->format('d F Y H:i') : null),
             ])
             ->actions([
-                Tables\Actions\Action::make('pay')
-                    ->translateLabel()
+                Tables\Actions\Action::make('cash')
+                    ->label(__('Cash'))
                     ->button()
-                    ->icon('heroicon-s-credit-card')
+                    ->icon('heroicon-s-banknotes')
+                    ->color('gray')
                     ->outlined()
                     ->hidden(fn($record) => $record->paid_off_at)
                     ->requiresConfirmation()
                     ->modalHeading(fn($record) => __('Pay for ') . $record->user->name)
-                    ->modalDescription(fn($record) => __('Create new transaction with amount ') . $record->amount)
+                    ->modalDescription(fn($record) => __('Create new transaction with amount ') . 'Rp ' . number_format($record->amount, 0, '', '.') . ' untuk ' . $record->savingCycle->name . ' metode ' . PaymentMethod::Cash->getLabel())
+                    ->modalIcon('heroicon-s-banknotes')
                     ->action(function ($record) {
                         $transaction = new Transaction;
 
@@ -80,8 +84,9 @@ class ManageSavingCycleMembers extends ManageRelatedRecords
                         $transaction->type = true; //debit
                         $transaction->amount = $record->amount;
                         $transaction->reference = $record->savingCycle->reference;
+                        $transaction->payment_method = PaymentMethod::Cash;
                         $transaction->transacted_at = now();
-                        $transaction->note = __('Pay for ') . $record->savingCycle->name;
+                        $transaction->note = __('Pay for ') . $record->savingCycle->name . '-' . PaymentMethod::Cash->getLabel();
 
                         $transaction->save();
 
@@ -93,6 +98,39 @@ class ManageSavingCycleMembers extends ManageRelatedRecords
                             ->title(__('Saving cycle member has been paid'))
                             ->send();
                     }),
+                Tables\Actions\Action::make('transfer')
+                    ->label(__('Transfer'))
+                    ->button()
+                    ->color('success')
+                    ->icon('heroicon-s-credit-card')
+                    ->outlined()
+                    ->hidden(fn($record) => $record->paid_off_at)
+                    ->requiresConfirmation()
+                    ->modalHeading(fn($record) => __('Pay for ') . $record->user->name)
+                    ->modalDescription(fn($record) => __('Create new transaction with amount ') . 'Rp ' . number_format($record->amount, 0, '', '.') . ' untuk ' . $record->savingCycle->name . ' metode ' . PaymentMethod::Transfer->getLabel())
+                    ->modalIcon('heroicon-s-credit-card')
+                    ->action(function ($record) {
+                        $transaction = new Transaction;
+
+                        $transaction->wallet_id = $record->user->wallet->id;
+                        $transaction->type = true; //debit
+                        $transaction->amount = $record->amount;
+                        $transaction->reference = $record->savingCycle->reference;
+                        $transaction->payment_method = PaymentMethod::Transfer;
+                        $transaction->transacted_at = now();
+                        $transaction->note = __('Pay for ') . $record->savingCycle->name . '-' . PaymentMethod::Transfer->getLabel();
+
+                        $transaction->save();
+
+                        $record->paid_off_at = now();
+                        $record->save();
+
+                        Notification::make()
+                            ->success()
+                            ->title(__('Saving cycle member has been paid'))
+                            ->send();
+                    }),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

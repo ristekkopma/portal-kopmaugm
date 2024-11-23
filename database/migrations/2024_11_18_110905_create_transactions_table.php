@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('type');
             $table->float('amount')->default(0);
             $table->string('reference')->nullable();
+            $table->string('payment_method')->default('cash');
             $table->text('note')->nullable();
             $table->softDeletes();
             $table->timestamps();

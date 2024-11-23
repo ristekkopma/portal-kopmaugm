@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
 use App\Enums\TransactionReference;
 use App\Observers\TransactionObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -19,6 +20,7 @@ class Transaction extends Model
         'type',
         'amount',
         'reference',
+        'payment_method',
         'transacted_at',
         'note'
     ];
@@ -28,6 +30,7 @@ class Transaction extends Model
         return [
             'type' => 'bool', //1 = debit, 0 = credit
             'reference' => TransactionReference::class,
+            'payment_method' => PaymentMethod::class,
             'transacted_at' => 'datetime',
         ];
     }

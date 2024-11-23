@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\PaymentMethod;
 use App\Enums\TransactionReference;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
@@ -79,6 +80,12 @@ class TransactionResource extends Resource
                         Forms\Components\DateTimePicker::make('transacted_at')
                             ->dehydrateStateUsing(fn($state): string => $state !== null ? $state : now())
                     ]),
+                    Forms\Components\Section::make([
+                        Forms\Components\ToggleButtons::make('payment_method')
+                            ->options(PaymentMethod::class)
+                            ->inline()
+                            ->required(),
+                    ]),
                     AppComponents\Forms\TimestampPlaceholder::make(),
                 ])
             ]);
@@ -91,9 +98,12 @@ class TransactionResource extends Resource
             ->columns([
                 AppComponents\Columns\IDColumn::make(),
                 Tables\Columns\TextColumn::make('transacted_at')
+                    ->sortable()
                     ->datetime('d F Y H:i'),
+                Tables\Columns\TextColumn::make('wallet.user.member.code')
+                    ->searchable()
+                    ->label('NAK'),
                 Tables\Columns\TextColumn::make('wallet.user.name')
-                    // ->description(fn(?Model $record) => $record->wallet?->user?->member->code)
                     ->label('Wallet')
                     ->numeric()
                     ->sortable(),
@@ -113,6 +123,10 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('reference')
                     ->badge()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->badge()
+                    ->searchable()
+                    ->sortable(),
                 AppComponents\Columns\LastModifiedColumn::make(),
                 AppComponents\Columns\CreatedAtColumn::make(),
             ])
@@ -127,6 +141,9 @@ class TransactionResource extends Resource
                     ->searchable()
                     ->preload()
                     ->label(__('Wallet')),
+                Tables\Filters\SelectFilter::make('payment_method')
+                    ->options(PaymentMethod::class)
+                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
