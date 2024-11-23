@@ -43,9 +43,9 @@ class AdminPanelProvider extends PanelProvider
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->maxContentWidth(MaxWidth::Full)
             ->font('Onest')
-            ->brandLogo(asset('storage/images/kopma-brand.png'))
+            ->brandLogo(asset('images/kopma-brand.png'))
             ->brandLogoHeight('2rem')
-            ->favicon(asset('storage/images/logo.png'))
+            ->favicon(asset('images/logo.png'))
             ->colors([
                 'primary' => Color::Blue,
             ])

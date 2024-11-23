@@ -46,9 +46,9 @@ class PortalPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Portal/Widgets'), for: 'App\\Filament\\Portal\\Widgets')
             ->widgets([])
-            ->brandLogo(asset('storage/images/kopma-brand.png'))
+            ->brandLogo(asset('images/kopma-brand.png'))
             ->brandLogoHeight('2rem')
-            ->favicon(asset('storage/images/logo.png'))
+            ->favicon(asset('images/logo.png'))
             ->userMenuItems([
                 MenuItem::make()
                     ->label(__('Administration'))
