@@ -18,8 +18,11 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\View\View;
 
 class PortalPanelProvider extends PanelProvider
 {
@@ -71,5 +74,17 @@ class PortalPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    public function boot(): void
+    {
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+            fn(): View => view('filament.support-contact-button'),
+        );
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+            fn(): View => view('filament.support-contact-button'),
+        );
     }
 }
