@@ -93,7 +93,7 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('transacted_at')
                     ->datetime('d F Y H:i'),
                 Tables\Columns\TextColumn::make('wallet.user.name')
-                    ->description(fn(?Model $record) => $record->wallet->user->member->code)
+                    // ->description(fn(?Model $record) => $record->wallet?->user?->member->code)
                     ->label('Wallet')
                     ->numeric()
                     ->sortable(),
