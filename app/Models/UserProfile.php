@@ -32,7 +32,7 @@ class UserProfile extends Model
     protected function casts(): array
     {
         return [
-            'dob' => 'datetime',
+            'dob' => 'datetime:Y-m-d',
             'marrital' => Marrital::class,
             'gender' => Gender::class,
             'religion' => Religion::class,
@@ -45,7 +45,7 @@ class UserProfile extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function Member(): BelongsTo
+    public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
