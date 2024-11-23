@@ -42,6 +42,8 @@ class EventResource extends Resource
                         Forms\Components\TextInput::make('title')
                             ->required()
                             ->maxLength(200),
+                        Forms\Components\Textarea::make('description')
+                            ->rows(3),
                         Forms\Components\FileUpload::make('image')
                             ->image()
                             ->maxSize(2048)
@@ -54,9 +56,12 @@ class EventResource extends Resource
                     ]),
                     Forms\Components\Section::make([
                         Forms\Components\DateTimePicker::make('opened_at')
-                            ->seconds(false),
+                            ->seconds(false)
+                            ->default(now())
+                            ->required(),
                         Forms\Components\DateTimePicker::make('closed_at')
-                            ->seconds(false),
+                            ->seconds(false)
+                            ->required(),
                     ]),
                 ])->columnSpan(2),
                 Forms\Components\Group::make([

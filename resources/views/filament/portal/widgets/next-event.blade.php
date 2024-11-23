@@ -10,14 +10,19 @@
             </div>
             <div class="inset-0 flex items-center justify-center pt-4">
                 <div class="z-10 text-center">
-                    <!-- Nama Member -->
-                    <h2 class="text-xl sm:text-3xl font-bold text-white">
+                    <!-- Nama Event -->
+                    <h2 class="text-xl sm:text-3xl font-bold text-gray-900 dark:text-white">
                         {{ $event->title }}
                     </h2>
 
-                    <!-- Kode Member -->
-                    <p class="text-base sm:text-2xl text-gray-200">
-                        {{ __('Registration closed at :date', ['date' => $event->closed_at->format('d M Y')]) }}
+                    <!-- Deskripsi Event -->
+                    <p class="text-base sm:text-2xl text-gray-500 dark:text-white">
+                        {{ $event->description }}
+                    </p>
+
+                    <!-- Tanggal Event -->
+                    <p class="text-base sm:text-2xl text-gray-700 pt-4 dark:text-white">
+                        {{ __('Registration closed at :date', ['date' => $event->closed_at->format('d F Y')]) }}
                     </p>
                 </div>
             </div>
