@@ -326,5 +326,11 @@
     "Unpaid saving cycle": "Siklus simpanan yang belum dibayar",
     "Paid": "Dibayar",
     "Currently": "Saat ini",
-    "Person": "orang"
+    "Person": "orang",
+    "Single": "Belum menikah",
+    "Married": "Menikah",
+    "Widowed": "Janda",
+    "Divorced": "Duda",
+    "Separated": "Cerai",
+    "Administration": "Administrasi"
 }

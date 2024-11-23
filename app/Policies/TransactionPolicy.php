@@ -14,7 +14,7 @@ class TransactionPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->role === UserRole::SuperAdmin && $user->role === UserRole::Finance;
+        return $user->role !== UserRole::Candidate && $user->wallet()->exists();
     }
 
     /**

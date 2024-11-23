@@ -90,7 +90,7 @@ class TransactionResource extends Resource
             ->columns([
                 AppComponents\Columns\IDColumn::make(),
                 Tables\Columns\TextColumn::make('transacted_at')
-                    ->datetime(),
+                    ->datetime('d F Y H:i'),
                 Tables\Columns\TextColumn::make('wallet.user.name')
                     ->label('Wallet')
                     ->numeric()

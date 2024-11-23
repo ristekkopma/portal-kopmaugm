@@ -158,7 +158,8 @@ class CandidateResource extends Resource
                                 ->options(Gender::class),
                             Forms\Components\TextInput::make('pob')
                                 ->label('Place of birth'),
-                            Forms\Components\DatePicker::make('dob')
+                            Forms\Components\DateTimePicker::make('dob')
+                                ->time(false)
                                 ->label('Date of birth'),
                             Forms\Components\Select::make('marrital')
                                 ->options(Marrital::class),
@@ -171,6 +172,7 @@ class CandidateResource extends Resource
                             Forms\Components\TextInput::make('major')
                                 ->maxLength(100),
                             Forms\Components\TextInput::make('nim')
+                                ->label('NIM')
                                 ->numeric()
                                 ->maxLength(30),
                             Forms\Components\TextInput::make('last_education')
@@ -228,6 +230,7 @@ class CandidateResource extends Resource
                     ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('interview_at')
+                    ->dateTime('d F Y H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('recruitment_status')
                     ->label('Status')

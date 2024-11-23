@@ -81,13 +81,14 @@ class TransactionResource extends Resource
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
-                AppComponents\Columns\IDColumn::make(),
                 Tables\Columns\TextColumn::make('transacted_at')
-                    ->datetime(),
+                    ->datetime('d F Y H:i')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('wallet.user.name')
                     ->label('Wallet')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('type')
                     ->formatStateUsing(fn(bool $state): string => match ($state) {
                         true => __('Debit'),
@@ -111,9 +112,7 @@ class TransactionResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make()->modalWidth(MaxWidth::ThreeExtraLarge),
-                ]),
+                Tables\Actions\ViewAction::make()->modalWidth(MaxWidth::ThreeExtraLarge),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

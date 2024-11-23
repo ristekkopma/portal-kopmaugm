@@ -1,5 +1,7 @@
 <x-filament-widgets::widget>
-    <div class="pb-4 text-center text-xl">{{ __('Upcoming events') }}</div>
+    @if ($events->count() > 0)
+        <div class="pb-4 text-center text-xl">{{ __('Upcoming events') }}</div>
+    @endif
     @foreach ($events as $event)
         <x-filament::section>
             <div class="relative bg-cover bg-center rounded-lg "

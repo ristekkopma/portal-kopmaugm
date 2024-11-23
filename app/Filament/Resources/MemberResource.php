@@ -171,6 +171,7 @@ class MemberResource extends Resource
                             Forms\Components\TextInput::make('major')
                                 ->maxLength(100),
                             Forms\Components\TextInput::make('nim')
+                                ->label('NIM')
                                 ->numeric()
                                 ->maxLength(30),
                             Forms\Components\TextInput::make('last_education')
@@ -215,6 +216,7 @@ class MemberResource extends Resource
                 AppComponents\Columns\IDColumn::make(),
                 Tables\Columns\TextColumn::make('code')
                     ->label('NAK')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Name')
@@ -226,17 +228,20 @@ class MemberResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type')
                     ->searchable()
+                    ->sortable()
                     ->badge(),
                 Tables\Columns\ToggleColumn::make('status')
                     ->onIcon('heroicon-s-check-circle')
                     ->offIcon('heroicon-s-x-circle')
                     ->onColor('primary')
-                    ->offColor('danger'),
+                    ->offColor('danger')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('user.wallet.balance')
                     ->label('Balance')
                     ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('joined_at')
+                    ->dateTime('d F Y')
                     ->sortable(),
                 AppComponents\Columns\LastModifiedColumn::make(),
                 AppComponents\Columns\CreatedAtColumn::make(),

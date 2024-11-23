@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('image')->nullable();
             $table->string('url')->nullable();
-            $table->string('opened_at')->nullable();
-            $table->string('closed_at')->nullable();
+            $table->date('opened_at')->nullable();
+            $table->date('closed_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

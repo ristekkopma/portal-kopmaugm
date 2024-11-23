@@ -67,6 +67,10 @@ class WalletResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 AppComponents\Columns\IDColumn::make(),
+                Tables\Columns\TextColumn::make('user.member.code')
+                    ->label('Code')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Name')
                     ->sortable()

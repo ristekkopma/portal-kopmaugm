@@ -9,6 +9,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Infolists;
+use Filament\Navigation\MenuItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -42,6 +43,9 @@ class AdminPanelProvider extends PanelProvider
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->maxContentWidth(MaxWidth::Full)
             ->font('Onest')
+            ->brandLogo(asset('storage/images/kopma-brand.png'))
+            ->brandLogoHeight('2rem')
+            ->favicon(asset('storage/images/logo.png'))
             ->colors([
                 'primary' => Color::Blue,
             ])
@@ -51,6 +55,13 @@ class AdminPanelProvider extends PanelProvider
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->pages([
                 Pages\Dashboard::class,
+            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Portal')
+                    ->url(fn(): string => route('filament.portal.pages.dashboard'))
+                    ->icon('heroicon-o-rocket-launch'),
+                // ...
             ])
             ->widgets([
                 // 

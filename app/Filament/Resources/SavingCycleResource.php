@@ -78,10 +78,10 @@ class SavingCycleResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('start_at')
-                    ->date()
+                    ->dateTime('d F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_at')
-                    ->date()
+                    ->dateTime('d F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reference')
                     ->badge()

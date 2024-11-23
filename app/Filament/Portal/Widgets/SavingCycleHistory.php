@@ -33,7 +33,7 @@ class SavingCycleHistory extends BaseWidget
                     ->formatStateUsing(fn($state) => $state !== null ? __('Paid') : __('Unpaid'))
                     ->badge()
                     ->placeholder(__('Unpaid'))
-                    ->description(fn($state) => $state ? $state : null),
+                    ->description(fn($state) => $state ? $state->format('d F Y H:i') : null),
             ])
             ->paginated([3, 5, 10, 20])
             ->defaultPaginationPageOption(3);

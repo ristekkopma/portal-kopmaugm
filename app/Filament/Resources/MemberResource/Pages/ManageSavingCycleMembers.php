@@ -60,10 +60,12 @@ class ManageSavingCycleMembers extends ManageRelatedRecords
                     ->label(__('Status'))
                     ->formatStateUsing(fn($state) => $state ? __('Paid') : __('Unpaid'))
                     ->badge()
-                    ->description(fn($state) => $state ? $state : null),
+                    ->placeholder(__('Unpaid'))
+                    ->description(fn($state) => $state ? $state->format('d F Y H:i') : null),
             ])
             ->actions([
                 Tables\Actions\Action::make('pay')
+                    ->translateLabel()
                     ->button()
                     ->icon('heroicon-s-credit-card')
                     ->outlined()

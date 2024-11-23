@@ -76,8 +76,10 @@ class EventResource extends Resource
                     ->wrap()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('url'),
-                Tables\Columns\TextColumn::make('opened_at'),
-                Tables\Columns\TextColumn::make('closed_at'),
+                Tables\Columns\TextColumn::make('opened_at')
+                    ->dateTime('d F Y H:i'),
+                Tables\Columns\TextColumn::make('closed_at')
+                    ->dateTime('d F Y H:i'),
                 AppComponents\Columns\LastModifiedColumn::make(),
                 AppComponents\Columns\CreatedAtColumn::make(),
 

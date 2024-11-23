@@ -25,8 +25,8 @@ class MembershipStats extends BaseWidget
                 ->icon('heroicon-o-arrow-path-rounded-square')
                 ->color('danger')
                 ->chart([7, 2, 10, 3, 15, 4, 17]),
-            Stat::make(__('Joined at'), Auth::user()->member->joined_at->format('d F Y'))
-                ->description(Auth::user()->member->joined_at->diffForHumans())
+            Stat::make(__('Joined at'), Auth::user()?->member?->joined_at->format('d F Y'))
+                ->description(Auth::user()?->member?->joined_at->diffForHumans())
                 ->icon('heroicon-o-user')
                 ->color('warning')
                 ->chart([7, 2, 10, 3, 15, 4, 17]),

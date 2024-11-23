@@ -64,7 +64,7 @@ class ManageTransactions extends ManageRelatedRecords
                 Tables\Columns\TextColumn::make('transacted_at')
                     ->sortable()
                     ->searchable()
-                    ->dateTime()
+                    ->dateTime('d F Y H:i'),
             ])
             ->filters([
                 //

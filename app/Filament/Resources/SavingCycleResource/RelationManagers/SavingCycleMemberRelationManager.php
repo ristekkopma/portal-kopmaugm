@@ -64,9 +64,15 @@ class SavingCycleMemberRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('member.code')
                     ->label('NAK')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Name')
+                    ->wrap()
+                    ->sortable()
+                    ->searchable(),
+                AppComponents\Columns\WhatsappLinkColumn::make('user.phone')
+                    ->label('Whatsapp')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->money('IDR'),
@@ -74,7 +80,9 @@ class SavingCycleMemberRelationManager extends RelationManager
                     ->label(__('Status'))
                     ->formatStateUsing(fn($state) => $state ? __('Paid') : __('Unpaid'))
                     ->badge()
-                    ->description(fn($state) => $state ? $state : null),
+                    ->sortable()
+                    ->placeholder(__('Unpaid'))
+                    ->description(fn($state) => $state ? $state->format('d F Y H:i') : null),
                 Tables\Columns\TextColumn::make('note')
                     ->wrap()
                     ->toggleable(isToggledHiddenByDefault: true),

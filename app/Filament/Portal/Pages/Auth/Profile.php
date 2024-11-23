@@ -81,7 +81,6 @@ class Profile extends BaseEditProfile
                         ])->columns(2),
                     Forms\Components\Section::make('Details')
                         ->relationship('profile')
-                        ->hiddenOn('create')
                         ->schema([
                             Forms\Components\TextInput::make('nickname')
                                 ->required()
@@ -93,8 +92,9 @@ class Profile extends BaseEditProfile
                             Forms\Components\TextInput::make('pob')
                                 ->required()
                                 ->label('Place of birth'),
-                            Forms\Components\DatePicker::make('dob')
+                            Forms\Components\DateTimePicker::make('dob')
                                 ->required()
+                                ->time(false)
                                 ->label('Date of birth'),
                             Forms\Components\Select::make('marrital')
                                 ->required()
@@ -113,6 +113,7 @@ class Profile extends BaseEditProfile
                                 ->required()
                                 ->maxLength(100),
                             Forms\Components\TextInput::make('nim')
+                                ->label('NIM')
                                 ->required()
                                 ->numeric()
                                 ->maxLength(30),
@@ -127,6 +128,7 @@ class Profile extends BaseEditProfile
                         ->hiddenOn('create')
                         ->schema([
                             Forms\Components\KeyValue::make('meta.activity')
+                                ->label(false)
                                 ->keyLabel(__('Activity'))
                                 ->valueLabel('Position')
                                 ->addable(),

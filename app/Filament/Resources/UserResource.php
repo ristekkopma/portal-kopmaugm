@@ -61,12 +61,10 @@ class UserResource extends Resource
                     Forms\Components\Section::make([
                         Forms\Components\TextInput::make('phone')
                             ->tel()
-                            ->required()
                             ->maxLength(15),
                     ]),
                     Forms\Components\Section::make()
                         ->columns(2)
-                        ->hiddenOn('edit')
                         ->schema([
                             Forms\Components\TextInput::make('password')
                                 ->password()
