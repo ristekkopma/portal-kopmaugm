@@ -136,8 +136,10 @@ class TransactionResource extends Resource
                     ->relationship('wallet', 'id', fn(Builder $query) => $query->orderBy('created_at', 'desc'))
                     ->getSearchResultsUsing(fn($query, $search) => $query->where('user.name', 'like', "%{$search}%"))
                     ->getOptionLabelFromRecordUsing(function ($record) {
-                        return $record->user->name . '-' . $record->user->member->code;
+                        $user = $record->user;
+                        return $user->name . '-' . optional($user->member)->code;
                     })
+
                     ->searchable()
                     ->preload()
                     ->label(__('Wallet')),
@@ -172,6 +174,7 @@ class TransactionResource extends Resource
         return [
             'index' => Pages\ListTransactions::route('/'),
             'create' => Pages\CreateTransaction::route('/create'),
+            'import' => Pages\ImportTransactions::route('/import'),
         ];
     }
 

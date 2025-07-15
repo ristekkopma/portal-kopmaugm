@@ -16,33 +16,28 @@ class MemberStats extends BaseWidget
 
     protected function getStats(): array
     {
+        
         return [
             Stat::make(__('Total members'), Member::member()->count() . ' ' . __('Person'))
                 ->description(__('Candidate') . ' ' . Member::candidate()->count() . ' ' . __('Person'))
                 ->color('primary')
                 ->icon('heroicon-o-users')
-                ->extraAttributes([
-                    'class' => 'cursor-pointer',
-                    'wire:click' => "redirectToIndexMember()",
-                ])
+                ->url(route('filament.admin.resources.members.index'))
                 ->chart(array_map(fn() => rand(1, 100), range(1, 7))),
+
             Stat::make(__('Balance all wallets'), 'Rp ' . number_format(Wallet::sum('balance'), 0, ',', '.'))
                 ->description(__('From') . ' ' . Wallet::count() . ' ' . __('Wallet'))
                 ->color('success')
                 ->icon('heroicon-o-wallet')
-                ->extraAttributes([
-                    'class' => 'cursor-pointer',
-                    'wire:click' => "redirectToIndexWallet()",
-                ])
+                ->url(route('filament.admin.resources.wallets.index'))
                 ->chart(array_map(fn() => rand(1, 100), range(1, 7))),
-            Stat::make(__('Unpaid saving cycles'), 'Rp ' . number_format(SavingCycleMember::whereNull('paid_off_at')->sum('amount'), 0, ',', '.'))
+
+            Stat::make(__('Unpaid saving cycles'), 'Rp ' . number_format(
+                SavingCycleMember::whereNull('paid_off_at')->sum('amount'), 0, ',', '.'))
                 ->description(__('From') . ' ' . SavingCycleMember::whereNull('paid_off_at')->count() . ' ' . __('arrears'))
                 ->color('danger')
                 ->icon('heroicon-s-credit-card')
-                ->extraAttributes([
-                    'class' => 'cursor-pointer',
-                    'wire:click' => "redirectToIndexSavingCycle()",
-                ])
+                ->url(route('filament.admin.resources.saving-cycles.index'))
                 ->chart(array_map(fn() => rand(1, 100), range(1, 7))),
         ];
     }

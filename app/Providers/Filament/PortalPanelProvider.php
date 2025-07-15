@@ -46,9 +46,13 @@ class PortalPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Portal/Pages'), for: 'App\\Filament\\Portal\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+                Pages\Poin::class, // ← ini
             ])
             ->discoverWidgets(in: app_path('Filament/Portal/Widgets'), for: 'App\\Filament\\Portal\\Widgets')
-            ->widgets([])
+            ->widgets([
+                    \App\Filament\Widgets\MemberStats::class,
+
+            ])
             ->brandLogo(asset('images/kopma-brand.png'))
             ->brandLogoHeight('2rem')
             ->favicon(asset('images/logo.png'))

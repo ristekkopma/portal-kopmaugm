@@ -5,6 +5,8 @@ namespace App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Pages\Actions\Action;
+
 
 class ListTransactions extends ListRecords
 {
@@ -13,7 +15,10 @@ class ListTransactions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
-        ];
+           Action::make('Import')
+            ->url(TransactionResource::getUrl('import'))
+            ->icon('heroicon-o-arrow-down-tray'),
+        Actions\CreateAction::make(),
+    ];
     }
 }
