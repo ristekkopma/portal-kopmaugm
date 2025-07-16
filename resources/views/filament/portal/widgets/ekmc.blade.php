@@ -4,7 +4,7 @@
 
 <x-filament-widgets::widget class="fi-member-widget">
     <div class="relative bg-cover bg-center rounded-lg "
-        style="height: 0; padding-top: 56.25%; background-image: url('{{ asset('images/E-KMC.jpg') }}');">
+        style="height: 0; padding-top: 56.25%; background-image: url('{{ asset('images/E-KMC.png') }}');">
         <div class="absolute inset-0 bg-black bg-opacity-50 rounded-lg"></div>
 
         <div class="absolute inset-x-0 bottom-0 z-10 p-6">

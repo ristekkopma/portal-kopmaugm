@@ -65,7 +65,7 @@ class Profile extends BaseEditProfile
                                 ->label('NIK')
                                 ->unique(ignoreRecord: true)
                                 ->numeric()
-                                ->rules(['digits:16'])
+                                ->rules(['digits:1'])
                                 ->required()
                                 ->live(onBlur: true)
                                 ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
