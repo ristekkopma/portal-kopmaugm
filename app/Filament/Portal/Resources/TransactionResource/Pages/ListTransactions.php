@@ -16,3 +16,4 @@ class ListTransactions extends ListRecords
             // Actions\CreateAction::make(),
         ];
     }
+}
