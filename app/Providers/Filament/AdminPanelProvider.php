@@ -34,6 +34,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->renderHook(
+            'filament-panels::auth.login.heading',
+            fn () => 'Masuk ke Panel Admin Kopma UGM')
             ->passwordReset()
             ->sidebarCollapsibleOnDesktop()
             ->sidebarFullyCollapsibleOnDesktop()

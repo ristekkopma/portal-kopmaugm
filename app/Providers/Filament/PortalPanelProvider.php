@@ -32,6 +32,7 @@ class PortalPanelProvider extends PanelProvider
             ->id('portal')
             ->path('portal')
             ->login()
+
             ->registration(Pages\Auth\Register::class)
             ->passwordReset()
             ->emailVerification()
@@ -82,6 +83,10 @@ class PortalPanelProvider extends PanelProvider
 
     public function boot(): void
     {
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
+            fn(): View => view('filament.admin-login-heading'),
+        );
         FilamentView::registerRenderHook(
             PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
             fn(): View => view('filament.support-contact-button'),
