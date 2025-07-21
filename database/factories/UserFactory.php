@@ -25,7 +25,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'nik' => fake()->nik(),
+            'nik' => fake()->numerify('################'),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'phone' => fake()->phoneNumber(),
@@ -33,7 +33,6 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
     }
-
     /**
      * Indicate that the model's email address should be unverified.
      */
@@ -44,3 +43,4 @@ class UserFactory extends Factory
         ]);
     }
 }
+

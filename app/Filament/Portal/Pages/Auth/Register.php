@@ -20,7 +20,7 @@ class Register extends Page
                     ->label('NIK')
                     ->unique(ignoreRecord: true)
                     ->numeric()
-                    ->rules(['digits:1'])
+                    ->rules(['digits:16'])
                     ->required()
                     ->live(onBlur: true)
                     ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),

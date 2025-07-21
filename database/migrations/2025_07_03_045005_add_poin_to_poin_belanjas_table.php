@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('poin_belanjas', function (Blueprint $table) {
-            $table->unsignedInteger('poin')->default(0)->after('nominal_belanja');
+            $table->unsignedInteger('poin')->default(0);
+
         });
     }
 
