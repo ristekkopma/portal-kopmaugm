@@ -39,7 +39,7 @@ class Member extends Model
     {
         return [
             'type' => MemberType::class,
-            'status' => 'bool',
+            'status' => MemberStatus::class,
             'recruitment_status' => RecruitmentStatus::class,
             'registered_at' => 'datetime',
             'interview_at' => 'datetime',
