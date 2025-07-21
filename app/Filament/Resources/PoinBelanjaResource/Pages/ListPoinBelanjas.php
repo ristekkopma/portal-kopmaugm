@@ -38,8 +38,6 @@ class ListPoinBelanjas extends ListRecords
             ])
             ->action(function (array $data) {
                 try {
-                    Excel::import(new PoinBelanjaImport, $data['file']);
-
                     // Reset counter
          $import = new PoinBelanjaImport;
         Excel::import($import, $data['file']);
