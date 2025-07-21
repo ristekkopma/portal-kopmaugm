@@ -24,6 +24,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Providers\Filament\FilamentView;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -34,9 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->renderHook(
-            'filament-panels::auth.login.heading',
-            fn () => 'Masuk ke Panel Admin Kopma UGM')
+            
             ->passwordReset()
             ->sidebarCollapsibleOnDesktop()
             ->sidebarFullyCollapsibleOnDesktop()
@@ -46,6 +45,14 @@ class AdminPanelProvider extends PanelProvider
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->maxContentWidth(MaxWidth::Full)
             ->font('Onest')
+            
+            // ->renderHook('filament.auth.login.form.after', fn () => <<<HTML
+            //     <div class="text-center -mt-6 mb-0">
+            //         <h1 class="fi-simple-header-heading text-center text-2xl font-bold tracking-tight text-gray-950 dark:text-white">
+            //             Panel Admin Kopma UGM
+            //         </h1>
+            //     </div>
+            // HTML)
             ->brandLogo(asset('images/kopma-brand.png'))
             ->brandLogoHeight('2rem')
             ->favicon(asset('images/logo.png'))
@@ -87,7 +94,14 @@ class AdminPanelProvider extends PanelProvider
     }
 
     public function boot(): void
+    
     {
+
+        // FilamentView::registerRenderHook(
+        //     PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
+        //     fn(): View => view('filament.admin-login-heading'),
+        // );
+
         Tables\Actions\ActionGroup::configureUsing(fn(Tables\Actions\ActionGroup $group) => $group->color('white'));
 
         Tables\Actions\CreateAction::configureUsing(fn(Tables\Actions\CreateAction $action) => $action->modalWidth(MaxWidth::ExtraLarge));

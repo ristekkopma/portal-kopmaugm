@@ -23,6 +23,7 @@ use Filament\View\PanelsRenderHook;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\View\View;
+use Filament\Facades\Filament;
 
 class PortalPanelProvider extends PanelProvider
 {
@@ -85,7 +86,14 @@ class PortalPanelProvider extends PanelProvider
     {
         FilamentView::registerRenderHook(
             PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
-            fn(): View => view('filament.admin-login-heading'),
+                function (): ?View {
+        if (Filament::getCurrentPanel()?->getId() !== 'admin') {
+            return null; // Tidak render apa-apa untuk panel lain
+        }
+
+        return view('filament.admin-login-heading');
+    },
+
         );
         FilamentView::registerRenderHook(
             PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
