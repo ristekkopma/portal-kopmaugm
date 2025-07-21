@@ -15,10 +15,12 @@ class ListTransactions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-           Action::make('Import')
+           
+        Actions\CreateAction::make(),
+
+        Action::make('Import')
             ->url(TransactionResource::getUrl('import'))
             ->icon('heroicon-o-arrow-down-tray'),
-        Actions\CreateAction::make(),
     ];
     }
 }

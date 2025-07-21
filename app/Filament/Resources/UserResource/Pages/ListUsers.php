@@ -12,11 +12,10 @@ use App\Models\User;
 use Livewire\WithFileUploads;
 use Filament\Notifications\Notification;
 use Maatwebsite\Excel\Facades\Excel;
-
+use App\Imports\UserImport;
 
 class ListUsers extends ListRecords
 {
-
     use WithFileUploads;
 
     protected static string $resource = UserResource::class;
@@ -27,47 +26,40 @@ class ListUsers extends ListRecords
             Actions\CreateAction::make(),
 
             Action::make('import')
-            ->label('Import')
-            ->icon('heroicon-m-arrow-up-tray')
+                ->label('Import')
+                ->icon('heroicon-m-arrow-up-tray')
+                ->modalHeading('Import Data Pengguna')
+                ->form([
+                    FileUpload::make('file')
+                        ->label('Upload CSV')
+                        ->acceptedFileTypes(['text/csv'])
+                        ->required()
+                        ->disk('local')
+                        ->storeFiles(false),
+                ])
+                ->action(function (array $data): void {
+                    try {
+                        $import = new UserImport;
+                        Excel::import($import, $data['file']);
 
-            ->modalHeading('Import Data Pengguna')
-            
-            ->form([
-                FileUpload::make('file')
-                    ->label('Upload CSV')
-                    ->acceptedFileTypes(['text/csv'])
-                    ->required()
-                    ->disk('local')
-                    ->storeFiles(false),
-            ])
-            ->action(function (array $data): void {
-                try {
-                    $import = new UserImport;
-                    Excel::import($import, $data['file']);
+                        $notif = Notification::make()
+                            ->title('Berhasil mengimpor data pengguna.');
 
-                    $notif = Notification::make()
-                        ->title('Berhasil mengimpor data pengguna.');
+                        if ($import->duplicateCount > 0) {
+                            $notif->body("{$import->duplicateCount} data diabaikan karena duplikat.");
+                        }
 
-                    if ($import->hasDuplicates) {
-                        $notif->body('Beberapa data diabaikan karena duplikat.');
+                        $notif->success()->send();
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Gagal mengimpor')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
                     }
-
-                    $notif->success()->send();
-
-                } catch (\Exception $e) {
-                    Notification::make()
-                        ->title('Gagal mengimpor')
-                        ->body($e->getMessage())
-                        ->danger()
-                        ->send();
-                }
-            })
-
-            
-            
-            ->modalSubmitActionLabel('Import')
-            // ->modalWidth('md')
-            ->color('primary')
-    ];
+                })
+                ->modalSubmitActionLabel('Import')
+                ->color('primary'),
+        ];
     }
 }

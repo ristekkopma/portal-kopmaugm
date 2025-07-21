@@ -31,15 +31,15 @@ class PoinAktivitasImport implements ToModel, WithHeadingRow
             return;
         }
 
-        $duplikat = PoinAktivitas::where('user_id', $user->id)
-    ->where('nama_kegiatan', $r['nama_kegiatan'])
-    ->where('jumlah_poin', (int) $r['jumlah_poin'])
-    ->whereDate('tanggal_kegiatan', Carbon::parse($r['tanggal_kegiatan']))
-    ->exists();
+            $duplikat = PoinAktivitas::where('user_id', $user->id)
+            ->where('nama_kegiatan', $r['nama_kegiatan'])
+            ->where('jumlah_poin', (int) $r['jumlah_poin'])
+            ->whereDate('tanggal_kegiatan', Carbon::parse($r['tanggal_kegiatan']))
+            ->exists();
 
-if ($duplikat) {
-    Log::info('Poin Aktivitas duplikat dilewati: ' . json_encode($r));
-    return;
+        if ($duplikat) {
+            Log::info('Poin Aktivitas duplikat dilewati: ' . json_encode($r));
+            return;
 }
 
 
