@@ -45,14 +45,14 @@ class UserResource extends Resource
                             ->required()
                             ->minLength(3)
                             ->maxLength(200),
-                        Forms\Components\TextInput::make('nik')
-                            ->label('NIK')
-                            ->unique(ignoreRecord: true)
-                            ->numeric()
-                            ->rules(['digits:16'])
-                            ->required()
-                            ->live(onBlur: true)
-                            ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
+                        // Forms\Components\TextInput::make('nik')
+                        //     ->label('NIK')
+                        //     ->unique(ignoreRecord: true)
+                        //     ->numeric()
+                        //     ->rules(['digits:16'])
+                        //     ->required()
+                        //     ->live(onBlur: true)
+                        //     ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
                         Forms\Components\TextInput::make('email')
                             ->email()
                             ->required()
@@ -106,8 +106,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->translateLabel()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nik')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('nik')
+                //     ->searchable(),
                 AppComponents\Columns\WhatsappLinkColumn::make(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),

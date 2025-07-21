@@ -61,14 +61,14 @@ class Profile extends BaseEditProfile
                         ->hiddenOn('create')
                         ->schema([
                             $this->getNameFormComponent(),
-                            Forms\Components\TextInput::make('nik')
-                                ->label('NIK')
-                                ->unique(ignoreRecord: true)
-                                ->numeric()
-                                ->rules(['digits:16'])
-                                ->required()
-                                ->live(onBlur: true)
-                                ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
+                            // Forms\Components\TextInput::make('nik')
+                            //     ->label('NIK')
+                            //     ->unique(ignoreRecord: true)
+                            //     ->numeric()
+                            //     ->rules(['digits:16'])
+                            //     ->required()
+                            //     ->live(onBlur: true)
+                            //     ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
                             $this->getEmailFormComponent()
                                 ->disabled()
                                 ->suffixIcon('heroicon-s-lock-closed')

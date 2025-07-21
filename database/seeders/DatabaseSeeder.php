@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         $user = User::factory()->create([
             'name' => 'Test User',
-            'nik' => fake()->numerify('################'),
+            // 'nik' => fake()->numerify('################'),
             'phone' => fake()->phoneNumber(),
             'email' => 'test@example.com',
             'role' => UserRole::SuperAdmin
