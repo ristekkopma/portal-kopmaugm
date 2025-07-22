@@ -7,15 +7,15 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('nik');
-        });
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->dropColumn('nik');
+        // });
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('nik')->nullable(); // sesuaikan dengan tipe semula
-        });
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->string('nik')->nullable(); // sesuaikan dengan tipe semula
+        // });
     }
 };
