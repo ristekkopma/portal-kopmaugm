@@ -74,6 +74,7 @@ class Profile extends BaseEditProfile
                                 ->suffixIcon('heroicon-s-lock-closed')
                                 ->hint(__('Diverifikasi pada :date', ['date' => $this->getUser()->email_verified_at->format('d M Y')])),
                             Forms\Components\TextInput::make('phone')
+                                ->required()
                                 ->tel()
                                 ->maxLength(15),
                             $this->getPasswordFormComponent(),

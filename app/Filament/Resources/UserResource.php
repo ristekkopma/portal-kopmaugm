@@ -44,7 +44,9 @@ class UserResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->minLength(3)
-                            ->maxLength(200),
+                            ->maxLength(200)
+                            ->extraAttributes(['class' => 'uppercase'])
+                            ->mutateDehydratedStateUsing(fn ($state) => strtoupper($state)),
                         // Forms\Components\TextInput::make('nik')
                         //     ->label('NIK')
                         //     ->unique(ignoreRecord: true)
@@ -60,6 +62,7 @@ class UserResource extends Resource
                     ]),
                     Forms\Components\Section::make([
                         Forms\Components\TextInput::make('phone')
+                            ->required()
                             ->tel()
                             ->maxLength(15),
                     ]),

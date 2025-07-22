@@ -24,6 +24,10 @@ class Register extends Page
                 //     ->required()
                 //     ->live(onBlur: true)
                 //     ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
+                Forms\Components\TextInput::make('phone')
+                    ->required()
+                    ->tel()
+                    ->maxLength(15),
                 $this->getEmailFormComponent(),
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),

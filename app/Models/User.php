@@ -58,7 +58,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             'password' => 'hashed',
             'role' => UserRole::class,
         ];
+        
+
     }
+
+    public function setNameAttribute($value): void
+            {
+            $this->attributes['name'] = strtoupper($value);
+            }
 
     public function canAccessPanel(Panel $panel): bool
     {
