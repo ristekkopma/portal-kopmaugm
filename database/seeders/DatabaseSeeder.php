@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             'joined_at' => now(),
             'registered_at' => now(),
             'recruitment_status' => RecruitmentStatus::Approved,
-            'status' => true
+            'status' => MemberStatus::Active
         ]);
     }
 }
