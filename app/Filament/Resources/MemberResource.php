@@ -196,7 +196,10 @@ class MemberResource extends Resource
                 Forms\Components\Group::make([
                     Forms\Components\Section::make([
                         Forms\Components\ToggleButtons::make('status')
-                            ->boolean(__('Active'), __('Inactive'))
+                            ->options([
+        MemberStatus::Active->value => __('Active'),
+        MemberStatus::Inactive->value => __('Inactive'),
+    ])
                             ->inline()
                             ->required(),
                     ]),
