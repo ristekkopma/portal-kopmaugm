@@ -255,8 +255,14 @@ class MemberResource extends Resource
                 Tables\Filters\SelectFilter::make('type')
                     ->options(MemberType::class),
                 Tables\Filters\SelectFilter::make('status')
-                    ->options([true => __('Active'), false => __('Inactive')]),
+                    // ->options([true => __('Active'), false => __('Inactive')]),
+                    ->options([
+                    App\Enums\MemberStatus::Active->value => __('Active'),
+                    App\Enums\MemberStatus::Inactive->value => __('Inactive'),
+                    ])
             ])
+            
+  
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
