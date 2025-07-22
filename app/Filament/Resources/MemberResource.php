@@ -242,7 +242,12 @@ class MemberResource extends Resource
                     ->offIcon('heroicon-s-x-circle')
                     ->onColor('primary')
                     ->offColor('danger')
-                    ->sortable(),
+                    ->sortable()
+    ->getStateUsing(fn ($record) => $record->status === \App\Enums\MemberStatus::Active)
+    ->afterStateUpdated(function ($record, $state) {
+        $record->status = $state ? \App\Enums\MemberStatus::Active : \App\Enums\MemberStatus::Inactive;
+        $record->save();
+    }),
                 Tables\Columns\TextColumn::make('user.wallet.balance')
                     ->label('Balance')
                     ->money('IDR')
