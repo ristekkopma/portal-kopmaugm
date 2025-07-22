@@ -20,7 +20,7 @@ use Filament\Support\RawJs;
 
 class SavingCycleMemberRelationManager extends RelationManager
 {
-    protected static string $relationship = 'savingCycleMember';
+    protected static string $relationship = 'savingCycleMembers';
 
     public static function getModelLabel(): string
     {

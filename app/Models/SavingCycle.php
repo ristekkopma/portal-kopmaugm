@@ -28,7 +28,7 @@ class SavingCycle extends Model
         ];
     }
 
-    public function savingCycleMember(): HasMany
+    public function savingCycleMembers(): HasMany
     {
         return $this->hasMany(SavingCycleMember::class);
     }

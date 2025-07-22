@@ -237,17 +237,13 @@ class MemberResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->badge(),
-                Tables\Columns\ToggleColumn::make('status')
-                    ->onIcon('heroicon-s-check-circle')
-                    ->offIcon('heroicon-s-x-circle')
-                    ->onColor('primary')
-                    ->offColor('danger')
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                
                     ->sortable()
-    ->getStateUsing(fn ($record) => $record->status === \App\Enums\MemberStatus::Active)
-    ->afterStateUpdated(function ($record, $state) {
-        $record->status = $state ? \App\Enums\MemberStatus::Active : \App\Enums\MemberStatus::Inactive;
-        $record->save();
-    }),
+                    ->searchable(),
+ 
+    
                 Tables\Columns\TextColumn::make('user.wallet.balance')
                     ->label('Balance')
                     ->money('IDR')

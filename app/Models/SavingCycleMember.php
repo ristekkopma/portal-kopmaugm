@@ -40,4 +40,10 @@ class SavingCycleMember extends Model
     {
         return $this->belongsTo(Member::class);
     }
+
+//     public function savingCycleMember()
+// {
+//     return $this->hasMany(SavingCycleMember::class);
+// }
+
 }

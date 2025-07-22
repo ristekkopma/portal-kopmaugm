@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Enums\TransactionReference;
 use App\Filament\Resources\SavingCycleResource\Pages;
 use App\Filament\Resources\SavingCycleResource\RelationManagers;
+use App\Filament\Resources\SavingCycleResource\RelationManagers\SavingCycleMemberRelationManager;
+
 use App\Models\SavingCycle;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -17,6 +19,9 @@ use App\Filament\Components as AppComponents;
 use Filament\Support\RawJs;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
+use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Concerns\HasRelationManagers;
+
 
 class SavingCycleResource extends Resource
 {
@@ -102,12 +107,18 @@ class SavingCycleResource extends Resource
             ]);
     }
 
+    // public static function getRelations(): array
+    // {
+    //     return [
+    //         RelationManagers\SavingCycleMemberRelationManager::class
+    //     ];
+    // }
     public static function getRelations(): array
-    {
-        return [
-            RelationManagers\SavingCycleMemberRelationManager::class
-        ];
-    }
+{
+    return [
+        SavingCycleMemberRelationManager::class,
+    ];
+}
 
     public static function getPages(): array
     {
