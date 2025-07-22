@@ -9,6 +9,7 @@ use App\Models\SavingCycleMember;
 use App\Models\Wallet;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Filament\Facades\Filament;
 
 class MemberStats extends BaseWidget
 {
@@ -18,6 +19,7 @@ class MemberStats extends BaseWidget
     {
         
         return [
+            
             Stat::make(__('Total members'), Member::member()->count() . ' ' . __('Person'))
                 ->description(__('Candidate') . ' ' . Member::candidate()->count() . ' ' . __('Person'))
                 ->color('primary')
@@ -44,7 +46,9 @@ class MemberStats extends BaseWidget
 
     public static function canView(): bool
     {
-        return auth()->user()->role !== UserRole::Candidate && auth()->user()->role !== UserRole::Member;
+         return Filament::getCurrentPanel()?->getId() === 'admin'
+        && auth()->user()->role !== UserRole::Candidate
+        && auth()->user()->role !== UserRole::Member;
     }
 
     public function redirectToIndexMember()
