@@ -261,7 +261,7 @@ class CandidateResource extends Resource
                         $record->update([
                             'code' => Str::random(8),
                             'recruitment_status' => RecruitmentStatus::Approved,
-                            'status' => true,
+                            'status' => MemberStatus::Active,
                             'joined_at' => now(),
                         ]);
                         $record->user->role = UserRole::Member;
