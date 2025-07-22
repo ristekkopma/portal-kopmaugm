@@ -257,8 +257,8 @@ class MemberResource extends Resource
                 Tables\Filters\SelectFilter::make('status')
                     // ->options([true => __('Active'), false => __('Inactive')]),
                     ->options([
-                    App\Enums\MemberStatus::Active->value => __('Active'),
-                    App\Enums\MemberStatus::Inactive->value => __('Inactive'),
+                    MemberStatus::Active->value => __('Active'),
+                    MemberStatus::Inactive->value => __('Inactive'),
                     ])
             ])
             
