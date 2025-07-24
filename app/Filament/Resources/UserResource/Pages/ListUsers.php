@@ -40,7 +40,8 @@ class ListUsers extends ListRecords
                 ->action(function (array $data): void {
                     try {
                         $import = new UserImport;
-                        Excel::import($import, $data['file']);
+                        Excel::import($import, $data['file'], null, \Maatwebsite\Excel\Excel::CSV, [
+    'withoutTransaction' => true,]);
 
                         $notif = Notification::make()
                             ->title('Berhasil mengimpor data pengguna.');
