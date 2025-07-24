@@ -16,6 +16,7 @@ class UserImport implements ToModel, WithHeadingRow
         $name  = trim($row['nama']);
         $email = trim($row['email']);
         $phone = trim($row['telepon'] ?? '');
+        $phone = $phone === '' ? null : $phone;
         $role  = strtolower(trim($row['role']));
         $pass  = trim($row['password']);
 
