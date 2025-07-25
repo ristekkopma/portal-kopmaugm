@@ -26,6 +26,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Providers\Filament\FilamentView;
 
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -66,6 +67,10 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
+            ->resources([
+    \App\Filament\Resources\LandingContentResource::class,
+])
+
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Portal')
