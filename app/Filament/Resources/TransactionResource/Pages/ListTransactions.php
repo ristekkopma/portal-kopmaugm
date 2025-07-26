@@ -39,7 +39,7 @@ class ListTransactions extends ListRecords
                 ])
                 ->action(function (array $data): void {
                     try {
-                        $import = new UserImport;
+                        $import = new TransactionsImport;
                         Excel::import($import, $data['file'], null, \Maatwebsite\Excel\Excel::CSV, [
                         'withoutTransaction' => true,]);
 
