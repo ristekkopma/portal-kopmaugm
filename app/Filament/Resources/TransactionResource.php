@@ -174,7 +174,7 @@ class TransactionResource extends Resource
         return [
             'index' => Pages\ListTransactions::route('/'),
             'create' => Pages\CreateTransaction::route('/create'),
-            'import' => Pages\ImportTransactions::route('/import'),
+            // 'import' => Pages\ImportTransactions::route('/import'),
         ];
     }
 
