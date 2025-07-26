@@ -13,6 +13,8 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class TransactionImport implements OnEachRow, WithHeadingRow
 {
+    public int $duplicateCount = 0;
+
     public function onRow(Row $row)
     {
         $r = $row->toArray();
