@@ -12,7 +12,7 @@ use App\Models\Transaction;
 use Livewire\WithFileUploads;
 use Filament\Notifications\Notification;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\TransactionsImport;
+use App\Imports\TransactionImport;
 
 
 class ListTransactions extends ListRecords
