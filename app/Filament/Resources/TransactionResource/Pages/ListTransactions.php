@@ -8,7 +8,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\Transaction;
 use Livewire\WithFileUploads;
 use Filament\Notifications\Notification;
 use Maatwebsite\Excel\Facades\Excel;
