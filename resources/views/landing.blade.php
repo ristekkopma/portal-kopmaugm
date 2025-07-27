@@ -627,7 +627,7 @@ a {
 
 
         <nav role="navigation" aria-label="Main navigation navigation links">
-          <a href="#" class="active" aria-current="page">Portal</a>
+          <a href="/" class="active" aria-current="page">Portal</a>
           <a href="#project">Tentang Kami</a>
           <a href="#resume">Alur Pendaftaran</a>
           <a href="#findUsTitle">Kontak</a>
