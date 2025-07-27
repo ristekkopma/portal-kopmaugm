@@ -1,0 +1,61 @@
+/* Tampilkan tombol navigasi Owl Carousel */
+.owl-nav {
+  display: flex !important;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  top: 40%;
+  left: 0;
+  right: 0;
+  padding: 0 10px;
+  pointer-events: none;
+}
+
+.owl-nav button {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: none;
+  font-size: 2rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  pointer-events: all;
+  transition: background-color 0.3s;
+}
+
+.owl-nav button:hover {
+  background-color: #007bff;
+  color: white;
+}
+/* Tombol navigasi carousel */
+.owl-nav button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 77.8px;
+  height: 115px;
+  font-size: 5rem; /* Perbesar simbol ‹ dan › */
+  background-color: #ffffff;
+  color: #333;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 99;
+  transition: all 0.3s ease;
+}
+
+/* Tombol prev & next posisi */
+.owl-nav .owl-prev {
+  left: -90px;
+}
+
+.owl-nav .owl-next {
+  right: -90px;
+}
+
+/* Hover */
+.owl-nav button:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+

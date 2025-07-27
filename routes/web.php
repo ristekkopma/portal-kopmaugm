@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LandingController;
 
-Route::redirect('/', '/portal');
+Route::get('/', [LandingController::class, 'index']);
 
 
 

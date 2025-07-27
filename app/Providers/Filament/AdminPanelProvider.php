@@ -67,9 +67,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->resources([
-    \App\Filament\Resources\LandingContentResource::class,
-])
+           
 
             ->userMenuItems([
                 MenuItem::make()
