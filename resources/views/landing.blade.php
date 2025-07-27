@@ -699,11 +699,7 @@ a {
               <img src="images/project/4.jpg" class="img-fluid" alt="project image 4">
             </div>
           </div>
-          <div class="item">
-            <div class="project-info">
-              <img src="images/project/5.jpg" class="img-fluid" alt="project image 5">
-            </div>
-          </div>
+          
         </div>
         <!-- End Carousel -->
         <div> 
