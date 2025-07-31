@@ -1,0 +1,155 @@
+
+/* Bagian Section */
+.project {
+  background-color: #f8f9fa; /* Warna latar belakang ringan */
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+/* Judul di tengah */
+.project h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+/* Project Item */
+.project .project-info {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project .project-info:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Gambar */
+.project .project-info img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Owl Carousel: jarak antar item */
+.owl-carousel .owl-item {
+  padding: 10px;
+}
+
+/* Tombol navigasi carousel */
+.owl-nav button {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  background-color: #ffffff;
+  color: #333;
+  border: none;
+  font-size: 2rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  z-index: 99;
+}
+
+.owl-nav .owl-prev {
+  left: -30px;
+}
+
+.owl-nav .owl-next {
+  right: -30px;
+}
+
+.owl-nav button:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Dots di bawah carousel */
+.owl-dots {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.owl-dot span {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  margin: 0 5px;
+  background: #ddd;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.owl-dot.active span,
+.owl-dot:hover span {
+  background: #007bff;
+}
+
+/* Tampilkan tombol navigasi Owl Carousel */
+.owl-nav {
+  display: flex !important;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  top: 40%;
+  left: 0;
+  right: 0;
+  padding: 0 10px;
+  pointer-events: none;
+}
+
+.owl-nav button {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: none;
+  font-size: 2rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  pointer-events: all;
+  transition: background-color 0.3s;
+}
+
+.owl-nav button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Tombol navigasi carousel */
+.owl-nav button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 77.8px;
+  height: 115px;
+  font-size: 5rem; /* Perbesar simbol ‹ dan › */
+  background-color: #ffffff;
+  color: #333;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 99;
+  transition: all 0.3s ease;
+}
+
+/* Tombol prev & next posisi */
+.owl-nav .owl-prev {
+  left: -90px;
+}
+
+.owl-nav .owl-next {
+  right: -90px;
+}
+
+/* Hover */
+.owl-nav button:hover {
+  background-color: #007bff;
+  color: #fff;
+}

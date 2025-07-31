@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/portal');
+Route::get('/', function () {
+    return view('landing');
+});
 
 
 

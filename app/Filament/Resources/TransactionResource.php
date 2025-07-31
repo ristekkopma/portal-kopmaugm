@@ -37,59 +37,73 @@ class TransactionResource extends Resource
         return __('Finance');
     }
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->columns(3)
-            ->schema([
-                Forms\Components\Group::make([
-                    Forms\Components\Section::make([
-                        Forms\Components\Select::make('wallet_id')
-                            ->label('Name')
-                            ->relationship('wallet', 'id', fn(Builder $query) => $query->orderBy('created_at', 'desc'))
-                            ->getOptionLabelFromRecordUsing(function ($record) {
-                                return $record->user->name;
-                            })
-                            ->preload(),
-                        Forms\Components\ToggleButtons::make('type')
-                            ->boolean(__('Debit'), __('Credit'))
-                            ->icons(['heroicon-o-minus', 'heroicon-o-plus'])
-                            ->inline()
-                            ->required(),
-                        Forms\Components\TextInput::make('amount')
-                            ->required()
-                            ->mask(RawJs::make('$money($input)'))
-                            ->stripCharacters(',')
-                            ->numeric()
-                            ->minValue(0)
-                            ->default(0)
-                            ->step(100)
-                            ->prefix('Rp'),
-                        Forms\Components\ToggleButtons::make('reference')
-                            ->options(TransactionReference::class)
-                            ->inline()
-                            ->required(),
-                    ])->columns(2),
-                    Forms\Components\Section::make([
-                        Forms\Components\Textarea::make('note')
-                            ->columnSpanFull(),
-                    ])
-                ])->columnSpan(2),
-                Forms\Components\Group::make([
-                    Forms\Components\Section::make([
-                        Forms\Components\DateTimePicker::make('transacted_at')
-                            ->dehydrateStateUsing(fn($state): string => $state !== null ? $state : now())
-                    ]),
-                    Forms\Components\Section::make([
-                        Forms\Components\ToggleButtons::make('payment_method')
-                            ->options(PaymentMethod::class)
-                            ->inline()
-                            ->required(),
-                    ]),
-                    AppComponents\Forms\TimestampPlaceholder::make(),
-                ])
-            ]);
-    }
+   public static function form(Form $form): Form
+{
+    return $form
+        ->columns(3)
+        ->schema([
+            Forms\Components\Group::make([
+                Forms\Components\Section::make([
+                    Forms\Components\Select::make('wallet_id')
+                        ->label('Nama Member')
+                        ->relationship(
+                            name: 'wallet',
+                            titleAttribute: 'id', // sebenarnya tidak dipakai karena pakai label custom
+                            modifyQueryUsing: fn (Builder $query) =>
+                                $query->whereHas('user', fn ($q) => $q->where('role', 'member'))
+                                    ->orderBy('created_at', 'desc')
+                        )
+                        ->getOptionLabelFromRecordUsing(fn ($record) =>
+                            $record->user->name . ' (' . optional($record->user->member)->code . ')'
+                        )
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+
+                    Forms\Components\ToggleButtons::make('type')
+                        ->boolean(__('Debit'), __('Credit'))
+                        ->icons(['heroicon-o-minus', 'heroicon-o-plus'])
+                        ->inline()
+                        ->required(),
+
+                    Forms\Components\TextInput::make('amount')
+                        ->required()
+                        ->mask(RawJs::make('$money($input)'))
+                        ->stripCharacters(',')
+                        ->numeric()
+                        ->minValue(0)
+                        ->default(0)
+                        ->step(100)
+                        ->prefix('Rp'),
+
+                    Forms\Components\ToggleButtons::make('reference')
+                        ->options(TransactionReference::class)
+                        ->inline()
+                        ->required(),
+                ])->columns(2),
+
+                Forms\Components\Section::make([
+                    Forms\Components\Textarea::make('note')
+                        ->columnSpanFull(),
+                ]),
+            ])->columnSpan(2),
+
+            Forms\Components\Group::make([
+                Forms\Components\Section::make([
+                    Forms\Components\DateTimePicker::make('transacted_at')
+                        ->dehydrateStateUsing(fn($state): string => $state !== null ? $state : now())
+                ]),
+                Forms\Components\Section::make([
+                    Forms\Components\ToggleButtons::make('payment_method')
+                        ->options(PaymentMethod::class)
+                        ->inline()
+                        ->required(),
+                ]),
+                AppComponents\Forms\TimestampPlaceholder::make(),
+            ]),
+        ]);
+}
+
 
     public static function table(Table $table): Table
     {
@@ -174,7 +188,7 @@ class TransactionResource extends Resource
         return [
             'index' => Pages\ListTransactions::route('/'),
             'create' => Pages\CreateTransaction::route('/create'),
-            'import' => Pages\ImportTransactions::route('/import'),
+            // 'import' => Pages\ImportTransactions::route('/import'),
         ];
     }
 
