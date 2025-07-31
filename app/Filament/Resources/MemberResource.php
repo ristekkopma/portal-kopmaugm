@@ -76,6 +76,10 @@ class MemberResource extends Resource
                                             ->email()
                                             ->required()
                                             ->maxLength(100),
+                                        Forms\Components\TextInput::make('phone') // Tambahkan ini
+                                            ->required()
+                                            ->tel()
+                                            ->maxLength(15),
                                         Forms\Components\TextInput::make('password')
                                             ->password()
                                             ->revealable(filament()->arePasswordsRevealable())

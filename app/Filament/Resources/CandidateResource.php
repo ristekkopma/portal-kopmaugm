@@ -88,6 +88,10 @@ class CandidateResource extends Resource
                                             ->dehydrateStateUsing(fn($state): string => Hash::make($state))
                                             ->live(debounce: 500)
                                             ->same('passwordConfirmation'),
+                                         Forms\Components\TextInput::make('phone') // Tambahkan ini
+                                            ->required()
+                                            ->tel()
+                                            ->maxLength(15),
                                         Forms\Components\TextInput::make('passwordConfirmation')
                                             ->password()
                                             ->revealable(filament()->arePasswordsRevealable())
@@ -133,6 +137,7 @@ class CandidateResource extends Resource
                                 ->required()
                                 ->tel()
                                 ->maxLength(15),
+                                
                             Forms\Components\TextInput::make('password')
                                 ->password()
                                 ->revealable(filament()->arePasswordsRevealable())
