@@ -267,6 +267,8 @@ class CandidateResource extends Resource
                             'code' => Str::random(8),
                             'recruitment_status' => RecruitmentStatus::Approved,
                             'status' => MemberStatus::Active,
+                            'registered_at' => now(),
+                            'interview_at' => now(),
                             'joined_at' => now(),
                         ]);
                         $record->user->role = UserRole::Member;
