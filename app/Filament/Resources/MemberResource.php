@@ -52,7 +52,10 @@ class MemberResource extends Resource
                                 ->maxLength(255),
                             Forms\Components\Select::make('user_id')
                                 ->disabledOn('edit')
-                                ->relationship('user', 'name', fn ($query) => $query->where('status', 'approved'))
+                                ->relationship('user', 'name', fn (Builder $query) =>
+                                    $query->whereHas('member', fn ($q) =>
+                                        $q->where('recruitment_status', 'approved')
+                                    )
                                 ->getOptionLabelUsing(fn($value) => User::find($value)?->name ?? $value)
                                 ->preload()
                                 ->placeholder(__('Select user or create new'))
