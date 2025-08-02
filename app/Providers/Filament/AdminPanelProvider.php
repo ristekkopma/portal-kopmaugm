@@ -47,13 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             ->font('Onest')
             
-            // ->renderHook('filament.auth.login.form.after', fn () => <<<HTML
-            //     <div class="text-center -mt-6 mb-0">
-            //         <h1 class="fi-simple-header-heading text-center text-2xl font-bold tracking-tight text-gray-950 dark:text-white">
-            //             Panel Admin Kopma UGM
-            //         </h1>
-            //     </div>
-            // HTML)
+            
             ->brandLogo(asset('images/kopma-brand.png'))
             ->brandLogoHeight('2rem')
             ->favicon(asset('images/logo.png'))
