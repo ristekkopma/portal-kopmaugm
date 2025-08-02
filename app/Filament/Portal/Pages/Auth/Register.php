@@ -27,6 +27,11 @@ class Register extends Page
                 Forms\Components\TextInput::make('phone')
                     ->required()
                     ->tel()
+                     ->unique(
+        table: 'users',
+        column: 'phone',
+        message: 'Nomor HP ini sudah digunakan. Silakan gunakan yang lain.'
+    )
                     ->maxLength(15),
                 $this->getEmailFormComponent(),
                 $this->getPasswordFormComponent(),
