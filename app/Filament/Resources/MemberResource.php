@@ -55,7 +55,7 @@ class MemberResource extends Resource
                                 ->relationship('user', 'name', fn (Builder $query) =>
                                     $query->whereHas('member', fn ($q) =>
                                         $q->where('recruitment_status', 'approved')
-                                    )
+                                    ))
                                 ->getOptionLabelUsing(fn($value) => User::find($value)?->name ?? $value)
                                 ->preload()
                                 ->placeholder(__('Select user or create new'))
