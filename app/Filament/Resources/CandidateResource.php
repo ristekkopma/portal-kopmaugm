@@ -179,8 +179,9 @@ class CandidateResource extends Resource
                             Forms\Components\TextInput::make('major')
                                 ->maxLength(100),
                             Forms\Components\TextInput::make('nim')
-                                ->label('NIM')
-                                ->numeric()
+                                ->label('Nomor Indentitas')
+                                ->rule('regex:/^[0-9\/\]+$/')
+                                -> placeholder('Contoh: KTP, NIM, NIP, dll')
                                 ->maxLength(30),
                             Forms\Components\TextInput::make('work')
                                 ->maxLength(100),

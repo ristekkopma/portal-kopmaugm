@@ -114,9 +114,10 @@ class Profile extends BaseEditProfile
                                 ->required()
                                 ->maxLength(100),
                             Forms\Components\TextInput::make('nim')
-                                ->label('NIM')
+                                ->label('Nomor Indentitas')
                                 ->required()
-                                ->numeric()
+                                ->rule('regex:/^[0-9\/\]+$/')
+                                -> placeholder('Contoh: KTP, NIM, NIP, dll')
                                 ->maxLength(30),
                             Forms\Components\TextInput::make('work')
                                 ->required()
