@@ -181,7 +181,7 @@ class MemberResource extends Resource
                                 ->maxLength(100),
                             Forms\Components\TextInput::make('nim')
                                 ->label('Nomor Indentitas')
-                                ->rule('regex:/^[0-9\/]+$/')
+                                ->numeric()
                                 -> placeholder('Contoh: KTP, NIM, NIP, dll')
                                 ->maxLength(30),
                             Forms\Components\TextInput::make('work')
