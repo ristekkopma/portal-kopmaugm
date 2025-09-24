@@ -12,6 +12,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Infolists\Infolist;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\TextEntry;
 
 class BookResource extends Resource
 {
@@ -31,6 +34,9 @@ class BookResource extends Resource
                 'success' => 'tersedia',
                 'danger' => 'tidak tersedia',
             ]),
+        ])
+        ->actions([
+            Tables\Actions\ViewAction::make(), // tombol View
         ]);
     }
 
@@ -40,11 +46,28 @@ class BookResource extends Resource
             //
         ];
     }
+    public static function infolist(Infolist $infolist): Infolist
+{
+    return $infolist
+        ->schema([
+            ImageEntry::make('cover_image')
+                ->disk('public')
+                ->label('Cover')
+                ->columnSpanFull(),
+
+            TextEntry::make('judul_buku')->label('Judul'),
+            TextEntry::make('penulis')->label('Penulis'),
+            TextEntry::make('kategori')->label('Kategori'),
+            TextEntry::make('status')->label('Status'),
+            TextEntry::make('deskripsi')->label('Deskripsi')->columnSpanFull(),
+        ]);
+}
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListBooks::route('/'),
+            'view'  => Pages\ViewBook::route('/{record}'),
             // 'create' => Pages\CreateBook::route('/create'),
             // 'edit' => Pages\EditBook::route('/{record}/edit'),
         ];

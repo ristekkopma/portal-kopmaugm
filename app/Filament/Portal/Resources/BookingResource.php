@@ -29,11 +29,7 @@ class BookingResource extends Resource
             Forms\Components\Hidden::make('user_id')
                 ->default(fn () => Auth::id()),
 
-            Forms\Components\Select::make('book_id')
-                ->relationship('book', 'judul_buku')
-                ->searchable()
-                ->required()
-                ->label('Pilih Buku'),
+           
 
             Forms\Components\DatePicker::make('tanggal_booking')
                 ->required()
@@ -74,7 +70,12 @@ class BookingResource extends Resource
                         'success' => 'disetujui',
                         'danger'  => 'ditolak',
                     ]),
-            ]);
+
+             Tables\Columns\TextColumn::make('catatan')
+                ->label('Catatan')
+                ->wrap() // supaya teks panjang otomatis kebungkus
+                ->toggleable(), // bisa disembunyikan via column toggle
+        ]);
     }
 
     public static function getRelations(): array
@@ -88,7 +89,7 @@ class BookingResource extends Resource
     {
         return [
             'index' => Pages\ListBookings::route('/'),
-            'create' => Pages\CreateBooking::route('/create'),
+            // 'create' => Pages\CreateBooking::route('/create'),
             // 'edit' => Pages\EditBooking::route('/{record}/edit'),
         ];
     }

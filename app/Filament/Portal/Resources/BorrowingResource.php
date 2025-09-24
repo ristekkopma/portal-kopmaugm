@@ -50,8 +50,8 @@ class BorrowingResource extends Resource
     {
         return [
             'index' => Pages\ListBorrowings::route('/'),
-            'create' => Pages\CreateBorrowing::route('/create'),
-            'edit' => Pages\EditBorrowing::route('/{record}/edit'),
+            // 'create' => Pages\CreateBorrowing::route('/create'),
+            // 'edit' => Pages\EditBorrowing::route('/{record}/edit'),
         ];
     }
 }
