@@ -11,7 +11,7 @@ use App\Filament\Portal\Resources\PoinBelanjaResource\Pages\Card;
 use App\Filament\Portal\Resources\PoinBelanjaResource\Widgets\TotalPoinBelanja;
 
 
-class ListPoinBelanja extends ListRecords
+class ListPoinBelanjas extends ListRecords
 {
     protected static string $resource = PoinBelanjaResource::class;
 
