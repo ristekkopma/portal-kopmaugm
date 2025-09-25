@@ -56,7 +56,7 @@ class PoinBelanjaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPoinBelanja::route('/'),
+            'index' => Pages\ListPoinBelanjas::route('/'),
             // 'create' => Pages\CreatePoinBelanja::route('/create'),
             // 'edit' => Pages\EditPoinBelanja::route('/{record}/edit'),
         ];
