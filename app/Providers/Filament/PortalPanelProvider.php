@@ -24,6 +24,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\View\View;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class PortalPanelProvider extends PanelProvider
 {

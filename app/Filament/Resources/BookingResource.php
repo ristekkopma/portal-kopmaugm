@@ -21,6 +21,7 @@ class BookingResource extends Resource
 
     protected static ?string $navigationGroup = 'Library';
     protected static ?string $navigationLabel = 'Booking';
+    
 
      public static function form(Form $form): Form
     {

@@ -23,6 +23,7 @@ class BookResource extends Resource
     protected static ?string $navigationGroup = 'Library';
     protected static ?string $navigationLabel = 'Katalog';
 
+
     public static function form(Form $form): Form
     {
         return $form->schema([

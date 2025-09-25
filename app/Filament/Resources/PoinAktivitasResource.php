@@ -18,17 +18,17 @@ class PoinAktivitasResource extends Resource
     protected static ?string $model = PoinAktivitas::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
-    protected static ?int $navigationSort = 1;
 
+    protected static ?string $navigationGroup = 'Poin';
+
+    protected static ?int $navigationGroupSort = 4;
+    
     public static function getModelLabel(): string
     {
         return __('Poin Activity');
     }
 
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Finance');
-    }
+    
    
     public static function form(Form $form): Form
     {

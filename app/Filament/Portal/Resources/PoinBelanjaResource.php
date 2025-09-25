@@ -17,7 +17,7 @@ class PoinBelanjaResource extends Resource
 {
     protected static ?string $model = PoinBelanja::class;
     protected static ?string $navigationGroup = 'Poin';
-    protected static ?string $navigationLabel = 'Poin Belanja';
+    protected static ?string $navigationLabel = 'Poin Shopping';
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
 
     public static function form(Forms\Form $form): Forms\Form

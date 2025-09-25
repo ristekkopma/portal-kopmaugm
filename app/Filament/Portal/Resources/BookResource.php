@@ -22,6 +22,7 @@ class BookResource extends Resource
     protected static ?string $navigationLabel = 'Katalog';
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
     protected static ?string $navigationGroup = 'Library';
+    
 
     public static function table(Table $table): Table
     {

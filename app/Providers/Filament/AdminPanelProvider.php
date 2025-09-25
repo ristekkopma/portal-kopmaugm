@@ -87,18 +87,22 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->navigationGroups([]);
+            ->navigationGroups([
+                'Membership',
+                'Management',
+                'Finance',
+                'Library',
+                'Poin',
+                'Settings',
+
+            ]);
     }
 
     public function boot(): void
     
     {
 
-        // FilamentView::registerRenderHook(
-        //     PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
-        //     fn(): View => view('filament.admin-login-heading'),
-        // );
-
+       
         Tables\Actions\ActionGroup::configureUsing(fn(Tables\Actions\ActionGroup $group) => $group->color('white'));
 
         Tables\Actions\CreateAction::configureUsing(fn(Tables\Actions\CreateAction $action) => $action->modalWidth(MaxWidth::ExtraLarge));

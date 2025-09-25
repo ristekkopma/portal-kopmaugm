@@ -20,7 +20,9 @@ class DocumentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';
 
-    protected static ?int $navigationSort = 3;
+
+
+
 
     public static function getModelLabel(): string
     {
@@ -29,7 +31,7 @@ class DocumentResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __(__('Membership'));
+        return __(__('Management'));
     }
 
     public static function form(Form $form): Form
