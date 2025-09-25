@@ -19,8 +19,8 @@ class BookingResource extends Resource
 {
     protected static ?string $model = Booking::class;
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
-    protected static ?string $navigationLabel = 'Booking Buku';
-    protected static ?string $navigationGroup = 'Perpustakaan';
+    protected static ?string $navigationLabel = 'Booking';
+    protected static ?string $navigationGroup = 'Library';
 
     public static function form(Form $form): Form
     {
@@ -30,13 +30,12 @@ class BookingResource extends Resource
                 ->default(fn () => Auth::id()),
 
            
-
-            Forms\Components\DatePicker::make('tanggal_booking')
+            Forms\Components\DatePicker::make('date_borrowing')
                 ->required()
                 ->default(now()),
 
                 Forms\Components\Select::make('book_id')
-    ->relationship('book', 'judul_buku')
+    ->relationship('book', 'title_book')
     ->searchable()
     ->required()
     ->afterStateHydrated(function ($state, $set) {
@@ -46,12 +45,12 @@ class BookingResource extends Resource
 
     Forms\Components\FileUpload::make('cover_preview')->image()->disabled()->label('Preview Cover'),
 
-            Forms\Components\Textarea::make('catatan'),
+            Forms\Components\Textarea::make('note'),
             
 
             // status_booking tidak bisa diisi member → default "menunggu"
             Forms\Components\Hidden::make('status_booking')
-                ->default('menunggu'),
+                ->default('waiting'),
         ]);
     }
 
@@ -62,17 +61,17 @@ class BookingResource extends Resource
                 $query->where('user_id', Auth::id()) // hanya booking milik member
             )
             ->columns([
-                Tables\Columns\TextColumn::make('book.judul_buku')->label('Buku'),
-                Tables\Columns\TextColumn::make('tanggal_booking')->date(),
+                Tables\Columns\TextColumn::make('book.title_book')->label('Buku'),
+                Tables\Columns\TextColumn::make('date_booking')->date(),
                 Tables\Columns\BadgeColumn::make('status_booking')
                     ->colors([
-                        'warning' => 'menunggu',
-                        'success' => 'disetujui',
-                        'danger'  => 'ditolak',
+                        'warning' => 'waiting',
+                        'success' => 'approve',
+                        'danger'  => 'rejected',
                     ]),
 
-             Tables\Columns\TextColumn::make('catatan')
-                ->label('Catatan')
+             Tables\Columns\TextColumn::make('note')
+                ->label('note')
                 ->wrap() // supaya teks panjang otomatis kebungkus
                 ->toggleable(), // bisa disembunyikan via column toggle
         ]);

@@ -20,53 +20,52 @@ class BookResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Administrasi';
-    protected static ?string $navigationLabel = 'Koleksi Buku';
+    protected static ?string $navigationGroup = 'Library';
+    protected static ?string $navigationLabel = 'Katalog';
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\TextInput::make('judul_buku')->required(),
-            Forms\Components\TextInput::make('penulis'),
-            Forms\Components\TextInput::make('penerbit'),
-            Forms\Components\TextInput::make('tahun_terbit')->numeric(),
+            Forms\Components\TextInput::make('title_book')->required(),
+            Forms\Components\TextInput::make('author'),
+            Forms\Components\TextInput::make('publisher'),
+            Forms\Components\TextInput::make('year_publish')->numeric(),
             Forms\Components\TextInput::make('isbn'),
-            Forms\Components\TextInput::make('kategori'),
-            Forms\Components\Textarea::make('deskripsi'),
+            Forms\Components\TextInput::make('category'),
+            Forms\Components\Textarea::make('description'),
                         // Form
             Forms\Components\FileUpload::make('cover_image')
                 ->image()
                 ->directory('books')
-                ->label('Cover Buku'),
+                ->label('Cover Book'),
 
-            Forms\Components\TextInput::make('stok')
+            Forms\Components\TextInput::make('stock')
                 ->numeric()
                 ->minValue(0)
                 ->required(),
             Forms\Components\Select::make('status')
                 ->options([
-                    'tersedia' => 'Tersedia',
-                    'dipinjam' => 'Dipinjam',
-                    'rusak'    => 'Rusak',
-                    'hilang'   => 'Hilang',
+                    'available' => 'Available',
+                    'no available' => 'No Available',
+                    
                 ])
-                ->default('tersedia'),
+                ->default('available'),
         ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('judul_buku')->searchable(),
-            Tables\Columns\TextColumn::make('penulis')->sortable(),
-            Tables\Columns\TextColumn::make('kategori'),
+            Tables\Columns\TextColumn::make('title_book')->searchable(),
+            Tables\Columns\TextColumn::make('author')->sortable(),
+            Tables\Columns\TextColumn::make('category'),
             Tables\Columns\ImageColumn::make('cover_image')->label('Cover'),
-Tables\Columns\TextColumn::make('stok')->label('Stok'),
+Tables\Columns\TextColumn::make('stock')->label('Stock'),
 
             Tables\Columns\BadgeColumn::make('status')->colors([
-                'success' => 'tersedia',
-                'warning' => 'dipinjam',
-                'danger'  => ['rusak', 'hilang'],
+                'success' => 'available',
+                'warning' => 'no available',
+                
             ]),
         ]);
     }

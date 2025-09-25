@@ -48,7 +48,7 @@ class PortalPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Portal/Pages'), for: 'App\\Filament\\Portal\\Pages')
             ->pages([
                 Pages\Dashboard::class,
-                Pages\Poin::class, // ← ini
+                
             ])
             ->discoverWidgets(in: app_path('Filament/Portal/Widgets'), for: 'App\\Filament\\Portal\\Widgets')
             ->widgets([
@@ -60,7 +60,7 @@ class PortalPanelProvider extends PanelProvider
             ->favicon(asset('images/logo.png'))
             ->userMenuItems([
                 MenuItem::make()
-                    ->label(__('Administration'))
+                    ->label(__('Library'))
                     ->url(fn(): string => route('filament.admin.pages.dashboard'))
                     ->icon('heroicon-o-shield-check')
                     ->visible(fn(): bool => auth()->user()->role !== UserRole::Candidate && auth()->user()->role !== UserRole::Member),

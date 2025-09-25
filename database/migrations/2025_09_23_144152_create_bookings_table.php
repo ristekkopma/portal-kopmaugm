@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // anggota
             $table->foreignId('book_id')->constrained()->cascadeOnDelete(); // buku
-            $table->date('tanggal_booking');
-            $table->text('catatan')->nullable();
-            $table->enum('status_booking', ['menunggu', 'disetujui', 'ditolak'])->default('menunggu');
+            $table->date('date_booking');
+            $table->text('note')->nullable();
+            $table->enum('status_booking', ['waiting', 'approve', 'rejected'])->default('waiting');
             $table->timestamps();
         });
     }

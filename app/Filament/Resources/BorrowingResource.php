@@ -18,8 +18,8 @@ class BorrowingResource extends Resource
     protected static ?string $model = Borrowing::class;
     // protected static ?string $model = null;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Administrasi';
-    protected static ?string $navigationLabel = 'Riwayat Peminjaman';
+    protected static ?string $navigationGroup = 'Library';
+    protected static ?string $navigationLabel = 'History';
     
     public static function form(Form $form): Form
     {
@@ -30,19 +30,19 @@ class BorrowingResource extends Resource
                 ->required(),
 
             Forms\Components\Select::make('book_id')
-                ->relationship('book', 'judul_buku')
+                ->relationship('book', 'title_book')
                 ->searchable()
                 ->required(),
 
-            Forms\Components\DatePicker::make('tanggal_pinjam')->required(),
-            Forms\Components\DatePicker::make('tanggal_kembali'),
+            Forms\Components\DatePicker::make('date_borrowing')->required(),
+            Forms\Components\DatePicker::make('date_return'),
             Forms\Components\Select::make('status')
-                ->options([
-                    'dipinjam'     => 'Dipinjam',
-                    'dikembalikan' => 'Dikembalikan',
-                    'terlambat'    => 'Terlambat',
+                ->options([ 
+                    'borrowed'     => 'Borrowed',
+                    'returned' => 'Returned',
+                    'late'    => 'late',
                 ])
-                ->default('dipinjam'),
+                ->default('Borrowed'),
         ]);
     }
 
@@ -50,13 +50,13 @@ class BorrowingResource extends Resource
     {
         return $table->columns([
             Tables\Columns\TextColumn::make('user.name')->label('Peminjam'),
-            Tables\Columns\TextColumn::make('book.judul_buku')->label('Buku'),
-            Tables\Columns\TextColumn::make('tanggal_pinjam')->date(),
-            Tables\Columns\TextColumn::make('tanggal_kembali')->date(),
+            Tables\Columns\TextColumn::make('book.title_book')->label('Book'),
+            Tables\Columns\TextColumn::make('date_borrowing')->date(),
+            Tables\Columns\TextColumn::make('date_return')->date(),
             Tables\Columns\BadgeColumn::make('status')->colors([
-                'warning' => 'dipinjam',
-                'success' => 'dikembalikan',
-                'danger'  => 'terlambat',
+                'warning' => 'borroed',
+                'success' => 'returned',
+                'danger'  => 'late',
             ]),
         ]);
     }

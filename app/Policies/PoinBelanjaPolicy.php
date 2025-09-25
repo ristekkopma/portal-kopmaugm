@@ -10,12 +10,19 @@ class PoinBelanjaPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->role === UserRole::SuperAdmin;
+        // SuperAdmin & Member boleh lihat
+        return in_array($user->role, [UserRole::SuperAdmin, UserRole::Member]);
     }
 
     public function view(User $user, PoinBelanja $poin): bool
     {
-        return $user->role === UserRole::SuperAdmin;
+        // SuperAdmin bisa lihat semua
+        if ($user->role === UserRole::SuperAdmin) {
+            return true;
+        }
+
+        // Member hanya bisa lihat poin miliknya sendiri
+        return $user->role === UserRole::Member && $poin->user_id === $user->id;
     }
 
     public function create(User $user): bool

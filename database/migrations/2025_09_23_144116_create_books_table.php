@@ -10,14 +10,16 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->string('judul_buku');
-            $table->string('penulis')->nullable();
-            $table->string('penerbit')->nullable();
-            $table->year('tahun_terbit')->nullable();
+            $table->string('title_book');
+            $table->string('author')->nullable();
+            $table->string('publisher')->nullable();
+            $table->year('year_publish')->nullable();
             $table->string('isbn')->nullable();
-            $table->string('kategori')->nullable();
-            $table->text('deskripsi')->nullable();
-            $table->enum('status', ['tersedia', 'dipinjam', 'rusak', 'hilang'])->default('tersedia');
+            $table->string('category')->nullable();
+            $table->text('description')->nullable();
+            $table->string('cover_image')->nullable();
+            $table->integer('stock')->default(0);
+            $table->enum('status', ['available', 'no available'])->default('available'); // otomatis
             $table->timestamps();
         });
     }

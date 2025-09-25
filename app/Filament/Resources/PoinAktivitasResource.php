@@ -22,7 +22,7 @@ class PoinAktivitasResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('Poin Aktivitas');
+        return __('Poin Activity');
     }
 
     public static function getNavigationGroup(): ?string

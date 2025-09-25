@@ -19,8 +19,8 @@ class BookingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Administrasi';
-    protected static ?string $navigationLabel = 'Booking Buku';
+    protected static ?string $navigationGroup = 'Library';
+    protected static ?string $navigationLabel = 'Booking';
 
      public static function form(Form $form): Form
     {
@@ -31,32 +31,32 @@ class BookingResource extends Resource
                 ->required(),
 
             Forms\Components\Select::make('book_id')
-                ->relationship('book', 'judul_buku')
+                ->relationship('book', 'title_book')
                 ->searchable()
                 ->required(),
 
-            Forms\Components\DatePicker::make('tanggal_booking')->required(),
-            Forms\Components\Textarea::make('catatan'),
+            Forms\Components\DatePicker::make('date_booking')->required(),
+            Forms\Components\Textarea::make('note'),
             Forms\Components\Select::make('status_booking')
                 ->options([
-                    'menunggu'   => 'Menunggu',
-                    'disetujui'  => 'Disetujui',
-                    'ditolak'    => 'Ditolak',
+                    'waiting'   => 'Waiting',
+                    'approve'  => 'Approve',
+                    'rejected'    => 'Rejected',
                 ])
-                ->default('menunggu'),
+                ->default('waiting'),
         ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('user.name')->label('Anggota'),
-            Tables\Columns\TextColumn::make('book.judul_buku')->label('Buku'),
-            Tables\Columns\TextColumn::make('tanggal_booking')->date(),
+            Tables\Columns\TextColumn::make('user.name')->label('Name'),
+            Tables\Columns\TextColumn::make('book.title_book')->label('Book'),
+            Tables\Columns\TextColumn::make('date_booking')->date(),
             Tables\Columns\BadgeColumn::make('status_booking')->colors([
-                'warning' => 'menunggu',
-                'success' => 'disetujui',
-                'danger'  => 'ditolak',
+                'warning' => 'waiting',
+                'success' => 'approve',
+                'danger'  => 'rejected',
             ]),
         ]);
     }

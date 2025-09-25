@@ -7,25 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 class Book extends Model
 {
     protected $fillable = [
-        'judul_buku',
-        'penulis',
-        'penerbit',
-        'tahun_terbit',
+        'title_book',
+        'author',
+        'publisher',
+        'year_publish',
         'isbn',
-        'kategori',
-        'deskripsi',
+        'category',
+        'description',
         'cover_image',
-    'stok',
+        'stock',
         'status',
     ];
 
     public function getStatusAttribute($value)
-{
-    if ($this->stok <= 0) {
-        return 'tidak tersedia';
+    {
+        if ($this->stok <= 0) {
+            return 'no available';
+        }
+        return $value;
     }
-    return $value;
-}
 
 
     public function borrowings()

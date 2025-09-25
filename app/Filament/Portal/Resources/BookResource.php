@@ -19,20 +19,20 @@ use Filament\Infolists\Components\TextEntry;
 class BookResource extends Resource
 {
     protected static ?string $model = Book::class;
-    protected static ?string $navigationLabel = 'Katalog Buku';
+    protected static ?string $navigationLabel = 'Katalog';
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
-    protected static ?string $navigationGroup = 'Perpustakaan';
+    protected static ?string $navigationGroup = 'Library';
 
     public static function table(Table $table): Table
     {
         return $table->columns([
             Tables\Columns\ImageColumn::make('cover_image')->label('Cover'),
-            Tables\Columns\TextColumn::make('judul_buku')->searchable(),
-            Tables\Columns\TextColumn::make('penulis'),
-            Tables\Columns\TextColumn::make('kategori'),
+            Tables\Columns\TextColumn::make('title_book')->searchable(),
+            Tables\Columns\TextColumn::make('author'),
+            Tables\Columns\TextColumn::make('category'),
             Tables\Columns\BadgeColumn::make('status')->colors([
-                'success' => 'tersedia',
-                'danger' => 'tidak tersedia',
+                'success' => 'available',
+                'danger' => 'no available',
             ]),
         ])
         ->actions([
@@ -55,11 +55,11 @@ class BookResource extends Resource
                 ->label('Cover')
                 ->columnSpanFull(),
 
-            TextEntry::make('judul_buku')->label('Judul'),
-            TextEntry::make('penulis')->label('Penulis'),
-            TextEntry::make('kategori')->label('Kategori'),
+            TextEntry::make('title_book')->label('Title'),
+            TextEntry::make('author')->label('Author'),
+            TextEntry::make('category')->label('Category'),
             TextEntry::make('status')->label('Status'),
-            TextEntry::make('deskripsi')->label('Deskripsi')->columnSpanFull(),
+            TextEntry::make('description')->label('Description')->columnSpanFull(),
         ]);
 }
 
