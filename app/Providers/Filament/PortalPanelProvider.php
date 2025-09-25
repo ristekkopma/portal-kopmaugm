@@ -62,7 +62,7 @@ class PortalPanelProvider extends PanelProvider
             ->favicon(asset('images/logo.png'))
             ->userMenuItems([
                 MenuItem::make()
-                    ->label(__('Library'))
+                    ->label(__('Administration'))
                     ->url(fn(): string => route('filament.admin.pages.dashboard'))
                     ->icon('heroicon-o-shield-check')
                     ->visible(fn(): bool => auth()->user()->role !== UserRole::Candidate && auth()->user()->role !== UserRole::Member),
