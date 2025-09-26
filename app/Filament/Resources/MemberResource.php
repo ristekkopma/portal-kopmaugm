@@ -26,18 +26,10 @@ use Filament\Pages\Page;
 class MemberResource extends Resource
 {
     protected static ?string $model = Member::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-shield-check';
-
-    public static function getModelLabel(): string
-    {
-        return __('Member');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Membership');
-    }
+     protected static ?string $navigationGroup = 'Membership';
+    protected static ?string $navigationLabel = 'Member';
+    protected static ?string $navigationGroupShort = '1';
 
     public static function form(Form $form): Form
     {

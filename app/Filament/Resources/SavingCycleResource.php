@@ -26,18 +26,10 @@ use Filament\Resources\Concerns\HasRelationManagers;
 class SavingCycleResource extends Resource
 {
     protected static ?string $model = SavingCycle::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
-
-    public static function getModelLabel(): string
-    {
-        return __('Saving cycle');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Finance');
-    }
+    protected static ?string $navigationGroup = 'Finance';
+    protected static ?string $navigationLabel = 'Saving Cycle';
+    protected static ?string $navigationGroupShort = '3';
 
     protected static ?string $recordTitleAttribute = 'name';
 

@@ -17,19 +17,10 @@ use App\Filament\Components as AppComponents;
 class EventResource extends Resource
 {
     protected static ?string $model = Event::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
-    
-
-    public static function getModelLabel(): string
-    {
-        return __('Event');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Management');
-    }
+    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationLabel = 'Event';
+    protected static ?string $navigationGroupShort = '2';
 
     protected static ?string $recordTitleAttribute = 'title';
 

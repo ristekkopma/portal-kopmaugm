@@ -93,7 +93,7 @@ class AdminPanelProvider extends PanelProvider
                 'Finance',
                 'Library',
                 'Poin',
-                'Settings',
+                'System',
 
             ]);
     }

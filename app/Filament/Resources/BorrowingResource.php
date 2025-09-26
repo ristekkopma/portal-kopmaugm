@@ -16,11 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class BorrowingResource extends Resource
 {
     protected static ?string $model = Borrowing::class;
-    // protected static ?string $model = null;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Library';
     protected static ?string $navigationLabel = 'History';
-
+    protected static ?string $navigationGroupShort = '4';
     
     public static function form(Form $form): Form
     {

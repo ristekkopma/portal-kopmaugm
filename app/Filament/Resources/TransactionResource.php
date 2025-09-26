@@ -24,18 +24,10 @@ use Illuminate\Support\Facades\App;
 class TransactionResource extends Resource
 {
     protected static ?string $model = Transaction::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-arrows-right-left';
-
-    public static function getModelLabel(): string
-    {
-        return __('Transaction');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Finance');
-    }
+    protected static ?string $navigationGroup = 'Finance';
+    protected static ?string $navigationLabel = 'Transaction';
+    protected static ?string $navigationGroupShort = '3';
 
    public static function form(Form $form): Form
 {

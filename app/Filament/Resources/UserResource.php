@@ -21,18 +21,10 @@ use App\Filament\Resources\UserResource\RelationManagers;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-users';
-
-    public static function getModelLabel(): string
-    {
-        return __('User');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('System');
-    }
+    protected static ?string $navigationGroup = 'User';
+    protected static ?string $navigationLabel = 'System';
+    protected static ?string $navigationGroupShort = '6';
 
     public static function form(Form $form): Form
     {

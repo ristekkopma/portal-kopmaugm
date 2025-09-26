@@ -17,12 +17,10 @@ use Filament\Forms\Components\FileUpload;
 class BookResource extends Resource
 {
     protected static ?string $model = Book::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
     protected static ?string $navigationGroup = 'Library';
     protected static ?string $navigationLabel = 'Katalog';
-
+    protected static ?string $navigationGroupShort = '4';
 
     public static function form(Form $form): Form
     {

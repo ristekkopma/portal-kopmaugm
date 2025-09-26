@@ -17,22 +17,10 @@ use App\Filament\Components as AppComponents;
 class DocumentResource extends Resource
 {
     protected static ?string $model = Document::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';
-
-
-
-
-
-    public static function getModelLabel(): string
-    {
-        return __('Document');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __(__('Management'));
-    }
+    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationLabel = 'Document';
+    protected static ?string $navigationGroupShort = '2';
 
     public static function form(Form $form): Form
     {

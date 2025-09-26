@@ -19,9 +19,10 @@ use App\Filament\Components as AppComponents;
 class PoinBelanjaResource extends Resource
 {
     protected static ?string $model = PoinBelanja::class;
-    protected static ?string $navigationLabel = 'Poin Shopping';
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
     protected static ?string $navigationGroup = 'Poin';
+    protected static ?string $navigationLabel = 'Poin Shopping';
+    protected static ?string $navigationGroupShort = '5';
       
 
 

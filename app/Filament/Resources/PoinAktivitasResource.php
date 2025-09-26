@@ -18,15 +18,9 @@ class PoinAktivitasResource extends Resource
     protected static ?string $model = PoinAktivitas::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
-
     protected static ?string $navigationGroup = 'Poin';
-
-    protected static ?int $navigationGroupSort = 4;
-    
-    public static function getModelLabel(): string
-    {
-        return __('Poin Activity');
-    }
+    protected static ?string $navigationLabel = 'Poin Activity';
+    protected static ?string $navigationGroupShort = '5';
 
     
    

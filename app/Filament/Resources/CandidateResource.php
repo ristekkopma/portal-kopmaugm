@@ -33,18 +33,12 @@ use App\Filament\Resources\CandidateResource\RelationManagers;
 class CandidateResource extends Resource
 {
     protected static ?string $model = Member::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Membership';
+    protected static ?string $navigationLabel = 'Candidate';
+    protected static ?string $navigationGroupShort = '1';
+    
 
-    public static function getModelLabel(): string
-    {
-        return __('Candidate');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __(__('Membership'));
-    }
 
     public static function form(Form $form): Form
     {
