@@ -61,14 +61,6 @@ class CandidateResource extends Resource
                                             ->minLength(3)
                                             ->maxLength(200)
                                             ->extraAttributes(['class' => 'uppercase']),
-                                        // Forms\Components\TextInput::make('nik')
-                                        //     ->label('NIK')
-                                        //     ->unique(ignoreRecord: true)
-                                        //     ->numeric()
-                                        //     ->rules(['digits:16'])
-                                        //     ->required()
-                                        //     ->live(onBlur: true)
-                                        //     ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
                                         Forms\Components\TextInput::make('email')
                                             ->email()
                                             ->required()
@@ -115,14 +107,6 @@ class CandidateResource extends Resource
                                 ->minLength(3)
                                 ->maxLength(200)
                                 ->columnSpan(2),
-                            // Forms\Components\TextInput::make('nik')
-                            //     ->label('NIK')
-                            //     ->unique(ignoreRecord: true)
-                            //     ->numeric()
-                            //     ->rules(['digits:16'])
-                            //     ->required()
-                            //     ->live(onBlur: true)
-                            //     ->hint(fn($state) => 'Currently ' . strlen($state) . ' digits.'),
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->required()

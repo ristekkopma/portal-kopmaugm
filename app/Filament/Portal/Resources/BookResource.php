@@ -19,10 +19,9 @@ use Filament\Infolists\Components\TextEntry;
 class BookResource extends Resource
 {
     protected static ?string $model = Book::class;
-    protected static ?string $navigationLabel = 'Katalog';
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
     protected static ?string $navigationGroup = 'Library';
-    
+    protected static ?string $navigationLabel = 'Katalog';    
 
     public static function table(Table $table): Table
     {

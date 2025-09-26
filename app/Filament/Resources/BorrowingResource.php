@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class BorrowingResource extends Resource
 {
     protected static ?string $model = Borrowing::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clock';
     protected static ?string $navigationGroup = 'Library';
     protected static ?string $navigationLabel = 'History';
     protected static ?string $navigationGroupShort = '4';

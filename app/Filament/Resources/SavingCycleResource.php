@@ -42,6 +42,7 @@ class SavingCycleResource extends Resource
                     Forms\Components\Section::make([
                         Forms\Components\TextInput::make('name')
                             ->required()
+                            ->searchable()
                             ->maxLength(200),
                         Forms\Components\ToggleButtons::make('reference')
                             ->options(TransactionReference::class)
@@ -99,12 +100,7 @@ class SavingCycleResource extends Resource
             ]);
     }
 
-    // public static function getRelations(): array
-    // {
-    //     return [
-    //         RelationManagers\SavingCycleMemberRelationManager::class
-    //     ];
-    // }
+
     public static function getRelations(): array
 {
     return [

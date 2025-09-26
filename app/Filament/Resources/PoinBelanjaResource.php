@@ -60,11 +60,6 @@ class PoinBelanjaResource extends Resource
                     ])->columns(2),
                 ])->columnSpan(3),
 
-                // Forms\Components\Group::make([
-                //     Forms\Components\Placeholder::make('total_poin')
-                //         ->label('Poin')
-                //         ->content('Akan dihitung otomatis: 1 poin per Rp10.000'),
-                // ]),
             ]);
     }
 

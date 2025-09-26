@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 class BorrowingResource extends Resource
 {
     protected static ?string $model = Borrowing::class;
-    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+    protected static ?string $navigationIcon = 'heroicon-o-clock';
     protected static ?string $navigationLabel = 'History';
     protected static ?string $navigationGroup = 'Library';
 

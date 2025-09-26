@@ -19,16 +19,10 @@ class WalletResource extends Resource
     protected static ?string $model = Wallet::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
-
-    public static function getModelLabel(): string
-    {
-        return __('Wallet');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Finance');
-    }
+    protected static ?string $navigationGroup = 'Finance';
+    protected static ?string $navigationLabel = 'Wallet';
+    protected static ?string $navigationGroupShort = '3';
+   
 
     public static function form(Form $form): Form
     {

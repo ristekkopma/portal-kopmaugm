@@ -38,15 +38,9 @@ class UserResource extends Resource
                             ->minLength(3)
                             ->maxLength(200)
                             ->extraAttributes(['class' => 'uppercase'])
+                            ->searchable()
                             ->mutateDehydratedStateUsing(fn ($state) => strtoupper($state)),
-                        // Forms\Components\TextInput::make('nik')
-                        //     ->label('NIK')
-                        //     ->unique(ignoreRecord: true)
-                        //     ->numeric()
-                        //     ->rules(['digits:16'])
-                        //     ->required()
-                        //     ->live(onBlur: true)
-                        //     ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
+
                         Forms\Components\TextInput::make('email')
                             ->email()
                             ->required()

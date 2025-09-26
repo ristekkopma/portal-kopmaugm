@@ -17,7 +17,7 @@ class PoinAktivitasResource extends Resource
 {
     protected static ?string $model = PoinAktivitas::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
   
     protected static ?string $navigationGroup = 'Poin';
 

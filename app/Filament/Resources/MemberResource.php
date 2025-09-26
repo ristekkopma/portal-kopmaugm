@@ -46,7 +46,9 @@ class MemberResource extends Resource
                                 ->disabledOn('edit')
                                 ->relationship('user', 'name', fn (Builder $query) =>
                                     $query->whereHas('member', fn ($q) =>
-                                        $q->where('recruitment_status', 'approved')
+                                        $q->candidate() // pakai scopeCandidate()
+                                            ->where('recruitment_status', 'submitted')
+
                                     ))
                                 ->getOptionLabelUsing(fn($value) => User::find($value)?->name ?? $value)
                                 ->preload()
@@ -59,14 +61,6 @@ class MemberResource extends Resource
                                             ->minLength(3)
                                             ->maxLength(200)
                                             ->extraAttributes(['class' => 'uppercase']),
-                                        // Forms\Components\TextInput::make('nik')
-                                        //     ->label('NIK')
-                                        //     ->unique(ignoreRecord: true)
-                                        //     ->numeric()
-                                        //     ->rules(['digits:16'])
-                                        //     ->required()
-                                        //     ->live(onBlur: true)
-                                        //     ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
                                         Forms\Components\TextInput::make('email')
                                             ->email()
                                             ->required()
@@ -116,14 +110,6 @@ class MemberResource extends Resource
                                 ->minLength(3)
                                 ->maxLength(200)
                                 ->columnSpan(2),
-                            // Forms\Components\TextInput::make('nik')
-                            //     ->label('NIK')
-                            //     ->unique(ignoreRecord: true)
-                            //     ->numeric()
-                            //     ->rules(['digits:16'])
-                            //     ->required()
-                            //     ->live(onBlur: true)
-                            //     ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->required()
@@ -228,6 +214,7 @@ class MemberResource extends Resource
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Name')
                     ->translateLabel()
+                    ->searchable()
                     ->sortable(),
                 AppComponents\Columns\WhatsappLinkColumn::make('user.phone')
                     ->label('Whatsapp')

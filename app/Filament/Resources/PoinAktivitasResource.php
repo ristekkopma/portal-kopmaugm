@@ -38,6 +38,7 @@ class PoinAktivitasResource extends Resource
                             ->required(),
                         Forms\Components\TextInput::make('nama_kegiatan')
                             ->label('Nama Kegiatan')
+                            ->searchable()
                             ->required(),
                         Forms\Components\DatePicker::make('tanggal_kegiatan')
                             ->label('Tanggal Kegiatan')

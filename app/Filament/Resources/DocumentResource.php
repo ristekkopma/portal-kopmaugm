@@ -31,12 +31,17 @@ class DocumentResource extends Resource
                     Forms\Components\Section::make([
                         Forms\Components\Select::make('member_id')
                             ->helperText('Biarkan kosong jika merupakan dokumen KOPMA')
-                            ->relationship('member', 'name')
+                             ->relationship(
+                                'member',
+                                'id',
+                                fn (Builder $query) => $query->member()
+                            )
                             ->preload()
                             ->searchable()
                             ->getOptionLabelFromRecordUsing(fn($record) => $record->user->name),
                         Forms\Components\TextInput::make('name')
                             ->label('Title')
+                            ->searchable()
                             ->required(),
                         Forms\Components\Textarea::make('description')
                             ->columnSpanFull()

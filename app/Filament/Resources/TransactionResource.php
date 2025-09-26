@@ -40,7 +40,7 @@ class TransactionResource extends Resource
                         ->label('Nama Member')
                         ->relationship(
                             name: 'wallet',
-                            titleAttribute: 'id', // sebenarnya tidak dipakai karena pakai label custom
+                            titleAttribute: 'id', 
                             modifyQueryUsing: fn (Builder $query) =>
                                 $query->whereHas('user', fn ($q) => $q->where('role', 'member'))
                                     ->orderBy('created_at', 'desc')
