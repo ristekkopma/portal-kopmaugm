@@ -27,6 +27,7 @@ use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+
 class PortalPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -65,7 +66,8 @@ class PortalPanelProvider extends PanelProvider
                     ->label(__('Administration'))
                     ->url(fn(): string => route('filament.admin.pages.dashboard'))
                     ->icon('heroicon-o-shield-check')
-                    ->visible(fn(): bool => auth()->user()->role !== UserRole::Candidate && auth()->user()->role !== UserRole::Member),
+                    ->visible(fn(): bool => Filament::auth()->check() && !in_array(Filament::auth()->user()->role, [UserRole::Candidate, UserRole::Member])),
+
                 // ...
             ])
             ->middleware([
