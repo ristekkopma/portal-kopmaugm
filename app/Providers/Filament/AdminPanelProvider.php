@@ -58,6 +58,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
+            
             ->pages([
                 Pages\Dashboard::class,
             ])
@@ -94,6 +95,7 @@ class AdminPanelProvider extends PanelProvider
                 'Library',
                 'Poin',
                 'System',
+                'Broadcast'
 
             ]);
     }

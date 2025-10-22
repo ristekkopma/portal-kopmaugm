@@ -13,8 +13,8 @@ class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
-    protected static ?string $navigationGroup = 'Komunikasi';
-    protected static ?string $navigationLabel = 'Pengumuman';
+    protected static ?string $navigationGroup = 'Broadcast';
+    protected static ?string $navigationLabel = 'Announcements';
 
     // 🧾 FORM
     public static function form(Forms\Form $form): Forms\Form
@@ -36,7 +36,7 @@ class AnnouncementResource extends Resource
             Forms\Components\Checkbox::make('is_broadcast')
                 ->label('Kirim ke semua user?')
                 ->reactive(),
-                
+
             Forms\Components\Select::make('target_user_ids')
                 ->label('Pilih User (multi)')
                 ->multiple()
