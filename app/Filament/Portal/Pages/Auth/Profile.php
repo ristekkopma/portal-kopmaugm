@@ -61,18 +61,15 @@ class Profile extends BaseEditProfile
                         ->hiddenOn('create')
                         ->schema([
                             $this->getNameFormComponent(),
-                            // Forms\Components\TextInput::make('nik')
-                            //     ->label('NIK')
-                            //     ->unique(ignoreRecord: true)
-                            //     ->numeric()
-                            //     ->rules(['digits:16'])
-                            //     ->required()
-                            //     ->live(onBlur: true)
-                            //     ->hint(fn($state) => __('Currently') . ' ' . strlen($state) . ' digits.'),
-                            $this->getEmailFormComponent()
-                                ->disabled()
-                                ->suffixIcon('heroicon-s-lock-closed')
-                                ->hint(__('Diverifikasi pada :date', ['date' => $this->getUser()->email_verified_at->format('d M Y')])),
+                                                        $this->getEmailFormComponent()
+                                    ->disabled()
+                                    ->suffixIcon('heroicon-s-lock-closed')
+                                    ->hint(function () {
+                                        return $this->getUser()->is_verified
+                                            ? __('Sudah diverifikasi oleh admin')
+                                            : __('Belum diverifikasi oleh admin');
+                                    }),
+
                             Forms\Components\TextInput::make('phone')
                                 ->required()
                                 ->tel()

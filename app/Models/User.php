@@ -2,80 +2,66 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Enums\UserRole;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'name',
-        'email',
-        'email_verified_at',
-        // 'nik',
-        'phone',
-        'password',
-        'avatar',
-        'role'
-    ];
+    'name',
+    'email',
+    'phone',
+    'password',
+    'avatar',
+    'role',
+    'is_verified', // ✅ ini penting supaya update bisa dilakukan
+];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'is_verified' => 'boolean', // ✅ Tambahkan agar mudah dipakai logika
         ];
-        
-
     }
 
+    // Ubah nama menjadi huruf besar otomatis
     public function setNameAttribute($value): void
-            {
-            $this->attributes['name'] = strtoupper($value);
-            }
+    {
+        $this->attributes['name'] = strtoupper($value);
+    }
 
+    /**
+     * Batasi akses panel berdasarkan peran
+     */
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
-            // return true;
+            // Admin panel hanya untuk pengurus
             return $this->role !== UserRole::Candidate && $this->role !== UserRole::Member;
         }
+
         if ($panel->getId() === 'portal') {
+            // Semua user bisa masuk portal, tapi kita batasi nanti berdasarkan is_verified
             return true;
         }
+
         return false;
     }
 
@@ -84,6 +70,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         return $this->avatar ? asset('storage/' . $this->avatar) : null;
     }
 
+    // === RELASI ===
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);

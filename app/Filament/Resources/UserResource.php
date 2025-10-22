@@ -38,7 +38,6 @@ class UserResource extends Resource
                             ->minLength(3)
                             ->maxLength(200)
                             ->extraAttributes(['class' => 'uppercase'])
-                            ->searchable()
                             ->mutateDehydratedStateUsing(fn ($state) => strtoupper($state)),
 
                         Forms\Components\TextInput::make('email')
@@ -87,37 +86,59 @@ class UserResource extends Resource
     }
 
     public static function table(Table $table): Table
-    {
-        return $table
-            ->defaultSort('created_at', 'desc')
-            ->columns([
-                AppComponents\Columns\IDColumn::make(),
-                Tables\Columns\TextColumn::make('name')
-                    ->translateLabel()
-                    ->searchable(),
-                // Tables\Columns\TextColumn::make('nik')
-                //     ->searchable(),
-                AppComponents\Columns\WhatsappLinkColumn::make(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('role')
-                    ->badge()
-                    ->searchable(),
-                AppComponents\Columns\LastModifiedColumn::make(),
-                AppComponents\Columns\CreatedAtColumn::make(),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
+{
+    return $table
+        ->defaultSort('created_at', 'desc')
+        ->columns([
+            AppComponents\Columns\IDColumn::make(),
+            Tables\Columns\TextColumn::make('name')
+                ->translateLabel()
+                ->searchable(),
+            AppComponents\Columns\WhatsappLinkColumn::make(),
+            Tables\Columns\TextColumn::make('email')
+                ->searchable(),
+            Tables\Columns\TextColumn::make('role')
+                ->badge()
+                ->searchable(),
+
+           
+            AppComponents\Columns\LastModifiedColumn::make(),
+            AppComponents\Columns\CreatedAtColumn::make(),
+        ])
+        ->filters([
+            //
+        ])
+        ->actions([
+    
+
+    // 🔹 Kolom gabungan: tombol Verifikasi / ikon centang
+    Tables\Actions\Action::make('verifikasi')
+        ->label(fn ($record) => $record->is_verified ? 'Done' : 'Check')
+        ->icon(fn ($record) => $record->is_verified ? 'heroicon-o-check-circle' : 'heroicon-o-clock')
+        ->color(fn ($record) => $record->is_verified ? 'success' : 'warning')
+        ->disabled(fn ($record) => $record->is_verified) // kalau sudah diverifikasi, nonaktifkan tombol
+        ->requiresConfirmation(fn ($record) => ! $record->is_verified)
+        ->visible(fn ($record) => true) // tampil selalu
+        ->action(function ($record) {
+            if (! $record->is_verified) {
+                $record->update(['is_verified' => true]);
+
+                \Filament\Notifications\Notification::make()
+                    ->title('User berhasil diverifikasi')
+                    ->body("Akun {$record->name} sekarang sudah aktif dan dapat login.")
+                    ->success()
+                    ->send();
+            }
+        }),
+        Tables\Actions\EditAction::make(),
+
+   ])
+
+   
+;
+
+}
+
 
     public static function getRelations(): array
     {

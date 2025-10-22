@@ -5,10 +5,11 @@ namespace App\Filament\Portal\Widgets;
 use App\Enums\UserRole;
 use App\Models\Member;
 use App\Models\SavingCycleMember;
-use DragonCode\Contracts\Cashier\Auth\Auth;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Support\Facades\Auth;
+
 
 class SavingCycleHistory extends BaseWidget
 {
@@ -22,7 +23,7 @@ class SavingCycleHistory extends BaseWidget
     {
         return $table
             ->query(
-                SavingCycleMember::query()->whereBelongsTo(auth()->user())->orderBy('created_at', 'desc')
+                SavingCycleMember::query()->whereBelongsTo(Auth::user())->orderBy('created_at', 'desc')
             )
             ->columns([
                 Tables\Columns\TextColumn::make('savingCycle.name'),
@@ -41,6 +42,7 @@ class SavingCycleHistory extends BaseWidget
 
     public static function canView(): bool
     {
-        return auth()->user()->role !== UserRole::Candidate;
+        return Auth::user()->role !== UserRole::Candidate;
+
     }
 }
