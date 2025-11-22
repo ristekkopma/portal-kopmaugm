@@ -59,44 +59,51 @@ class AnnouncementResource extends Resource
                         ->rowIndex(),
 
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Nama Broadcast')
+                    ->label('Title Broadcast')
                     ->searchable()
                     ->limit(40),
 
-                // Tables\Columns\IconColumn::make('is_broadcast')
-                //     ->label('Broadcast')
-                //     ->boolean()
-                //     ->trueIcon('heroicon-o-check-circle')
-                //     ->falseIcon('heroicon-o-x-circle')
-                //     ->color(fn($state) => $state ? 'success' : 'danger'),
 
-                Tables\Columns\IconColumn::make('status_icon')
-                    ->label('Status')
-                    ->getStateUsing(fn($record) => $record->status)
-                    ->icon(fn($state) => match ($state) {
-                        'sending' => 'heroicon-o-check-circle',
-                        'queued'  => 'heroicon-o-clock',
-                        'failed'  => 'heroicon-o-x-circle',
-                        default   => 'heroicon-o-minus-circle'
-                    })
-                    ->color(fn($state) => match ($state) {
-                        'sending' => 'success',
-                        'queued'  => 'warning',
-                        'failed'  => 'danger',
-                        default   => 'gray'
-                    }),
+               Tables\Columns\TextColumn::make('status')
+                ->label('Status')
+                ->formatStateUsing(fn($state) => match ($state) {
+                    'sending' => 'Sending',
+                    'queued'  => 'Queued',
+                    'failed'  => 'Failed',
+                    default   => 'Default'
+                })
+                ->color(fn($state) => match ($state) {
+                    'sending' => 'success',
+                    'queued'  => 'warning',
+                    'failed'  => 'danger',
+                    default   => 'gray'
+                }),
+
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Dibuat')
+                    ->label('Created At')
                     ->dateTime('M d, Y H:i'),
             ])
+            
             ->actions([
                 Tables\Actions\Action::make('detail')
                     ->label('Detail')
                     ->icon('heroicon-o-eye')
                     ->color('primary')
                     ->url(fn($record) => route('filament.admin.resources.announcements.view', $record)),
-            ]);
+     
+
+            // 🔴 Tombol hapus per baris
+            Tables\Actions\DeleteAction::make()
+                ->label('Hapus')
+                ->requiresConfirmation() // biar ada popup konfirmasi
+                ->color('danger')
+                ->icon('heroicon-o-trash'),
+        ])
+        ->bulkActions([
+            Tables\Actions\DeleteBulkAction::make()
+                ->label('Hapus Terpilih'),
+        ]);
     }
 
     public static function getPages(): array
