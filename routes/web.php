@@ -11,6 +11,13 @@ Route::get('/login', function () {
     return redirect('/portal/login');
 })->name('login');
 
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'application' => config('app.name'),
+    ]);
+})->name('health');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/events', [EventController::class, 'index'])
         ->name('events.index');
