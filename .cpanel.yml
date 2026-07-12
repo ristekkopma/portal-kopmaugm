@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export APPPATH=/home/u1656986/public_html/repositories/portal-kopmaugm.com
+    - cd $APPPATH && php artisan optimize:clear
