@@ -3,30 +3,26 @@
 namespace App\Providers\Filament;
 
 use App\Enums\UserRole;
-use Filament\Panel;
-
-use Filament\Widgets;
-use Filament\PanelProvider;
 use App\Filament\Portal\Pages;
-use Filament\Support\Colors\Color;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Session\Middleware\AuthenticateSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationItem;
+use Filament\Panel;
+use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\AuthenticateSession;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
-use Filament\Facades\Filament;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-
 
 class PortalPanelProvider extends PanelProvider
 {
@@ -36,7 +32,6 @@ class PortalPanelProvider extends PanelProvider
             ->id('portal')
             ->path('portal')
             ->login()
-
             ->registration(Pages\Auth\Register::class)
             ->passwordReset()
             ->emailVerification()
@@ -44,19 +39,40 @@ class PortalPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->databaseNotificationsPolling('60s')
             ->topNavigation()
+
+            /*
+             * Menu Events pada dashboard depan anggota.
+             * sort(1) digunakan agar posisinya berada setelah Dashboard
+             * dan sebelum menu resource seperti Documents.
+             */
+            ->navigationItems([
+                NavigationItem::make('Events')
+                    ->url(fn (): string => route('events.index'))
+                    ->icon('heroicon-o-calendar-days')
+                    ->isActiveWhen(fn (): bool => request()->routeIs('events.*'))
+                    ->sort(1),
+            ])
+
             ->colors([
                 'primary' => Color::Emerald,
             ])
-            ->discoverResources(in: app_path('Filament/Portal/Resources'), for: 'App\\Filament\\Portal\\Resources')
-            ->discoverPages(in: app_path('Filament/Portal/Pages'), for: 'App\\Filament\\Portal\\Pages')
+            ->discoverResources(
+                in: app_path('Filament/Portal/Resources'),
+                for: 'App\\Filament\\Portal\\Resources'
+            )
+            ->discoverPages(
+                in: app_path('Filament/Portal/Pages'),
+                for: 'App\\Filament\\Portal\\Pages'
+            )
             ->pages([
                 Pages\Dashboard::class,
-                
             ])
-            ->discoverWidgets(in: app_path('Filament/Portal/Widgets'), for: 'App\\Filament\\Portal\\Widgets')
+            ->discoverWidgets(
+                in: app_path('Filament/Portal/Widgets'),
+                for: 'App\\Filament\\Portal\\Widgets'
+            )
             ->widgets([
-                    \App\Filament\Widgets\MemberStats::class,
-
+                \App\Filament\Widgets\MemberStats::class,
             ])
             ->brandLogo(asset('images/kopma-brand.png'))
             ->brandLogoHeight('2rem')
@@ -64,11 +80,19 @@ class PortalPanelProvider extends PanelProvider
             ->userMenuItems([
                 MenuItem::make()
                     ->label(__('Administration'))
-                    ->url(fn(): string => route('filament.admin.pages.dashboard'))
+                    ->url(fn (): string => route('filament.admin.pages.dashboard'))
                     ->icon('heroicon-o-shield-check')
-                    ->visible(fn(): bool => Filament::auth()->check() && !in_array(Filament::auth()->user()->role, [UserRole::Candidate, UserRole::Member])),
-
-                // ...
+                    ->visible(
+                        fn (): bool =>
+                            Filament::auth()->check()
+                            && ! in_array(
+                                Filament::auth()->user()->role,
+                                [
+                                    UserRole::Candidate,
+                                    UserRole::Member,
+                                ]
+                            )
+                    ),
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -90,22 +114,23 @@ class PortalPanelProvider extends PanelProvider
     {
         FilamentView::registerRenderHook(
             PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
-                function (): ?View {
-        if (Filament::getCurrentPanel()?->getId() !== 'admin') {
-            return null; // Tidak render apa-apa untuk panel lain
-        }
+            function (): ?View {
+                if (Filament::getCurrentPanel()?->getId() !== 'admin') {
+                    return null;
+                }
 
-        return view('filament.admin-login-heading');
-    },
-
+                return view('filament.admin-login-heading');
+            },
         );
+
         FilamentView::registerRenderHook(
             PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
-            fn(): View => view('filament.support-contact-button'),
+            fn (): View => view('filament.support-contact-button'),
         );
+
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
-            fn(): View => view('filament.support-contact-button'),
+            fn (): View => view('filament.support-contact-button'),
         );
     }
 }

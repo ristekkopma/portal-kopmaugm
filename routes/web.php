@@ -1,16 +1,17 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('landing');
+    return redirect('/portal');
 });
 
 Route::get('/login', function () {
-    // arahkan otomatis ke login portal
     return redirect('/portal/login');
 })->name('login');
 
-
-
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/events', [EventController::class, 'index'])
+        ->name('events.index');
+});
