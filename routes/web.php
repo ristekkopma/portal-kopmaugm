@@ -22,7 +22,8 @@ Route::get('/health', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/events', fn () => redirect()->route('filament.portal.resources.events.index'))
         ->name('events.index');
-    Route::get('/event/{event:slug}', [EventController::class, 'show'])->name('events.show');
+    Route::get('/event/{event:slug}', fn () => redirect()->route('filament.portal.resources.events.index'))
+        ->name('events.show');
     Route::post('/event/{event:slug}/follow', [EventController::class, 'toggleFollow'])->name('events.follow');
     Route::post('/event/{event:slug}/review', [EventController::class, 'saveReview'])->name('events.review');
 });

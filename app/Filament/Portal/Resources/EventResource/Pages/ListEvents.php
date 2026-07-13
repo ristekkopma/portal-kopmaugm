@@ -11,6 +11,21 @@ class ListEvents extends ListRecords
 {
     protected static string $resource = EventResource::class;
 
+    public function getHeading(): string
+    {
+        return 'Events';
+    }
+
+    public function getSubheading(): ?string
+    {
+        return 'Temukan dan ikuti agenda terbaru Kopma UGM.';
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        return [EventResource::getUrl() => 'Events', 'List'];
+    }
+
     protected function getHeaderActions(): array
     {
         return [
