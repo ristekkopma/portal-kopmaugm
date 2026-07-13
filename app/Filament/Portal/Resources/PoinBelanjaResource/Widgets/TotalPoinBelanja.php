@@ -2,20 +2,22 @@
 
 namespace App\Filament\Portal\Resources\PoinBelanjaResource\Widgets;
 
-use Filament\Widgets\Widget;
-use Illuminate\Support\Facades\Auth;       // <- wajib untuk Auth::id()
-use App\Models\PoinBelanja;               // <- wajib untuk model PoinBelanja
+use App\Models\PoinBelanja;
+use Filament\Widgets\StatsOverviewWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Auth;
 
-class TotalPoinBelanja extends Widget
+class TotalPoinBelanja extends StatsOverviewWidget
 {
-    protected static string $view = 'filament.portal.resources.poin-belanja-resource.widgets.total-poin-belanja';
-
-    protected int | string | array $columnSpan = 'full';
-
-    public int $total = 0;
-
-    public function mount(): void
+    protected function getStats(): array
     {
-        $this->total = PoinBelanja::where('user_id', Auth::id())->sum('total_poin');
+        return [
+            Stat::make(
+                'Total Poin Belanja',
+                number_format(PoinBelanja::where('user_id', Auth::id())->sum('total_poin'), 0, ',', '.'),
+            )
+                ->icon('heroicon-o-shopping-bag')
+                ->color('success'),
+        ];
     }
 }
