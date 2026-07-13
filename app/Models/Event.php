@@ -89,7 +89,7 @@ class Event extends Model
 
     public function reviews(): HasMany
     {
-        return $this->hasMany(EventReview::class);
+        return $this->hasMany(EventReview::class)->latest();
     }
 
     public function getRouteKeyName(): string
