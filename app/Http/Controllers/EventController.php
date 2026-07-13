@@ -2,19 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\Event;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class EventController extends Controller
 {
     /**
      * Menampilkan daftar event.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
+        $isAdmin = $this->isAdmin($request);
+
         $events = Event::query()
+            ->withCount(['followers', 'reviews'])
+            ->withAvg('reviews', 'rating')
+            ->when(! $isAdmin, fn ($query) => $query
+                ->where('status', '!=', 'draft')
+                ->where(function ($query) {
+                    $query->whereNotNull('published_at')
+                        ->orWhere('status', 'published')
+                        ->orWhere('status', 'ongoing')
+                        ->orWhere('status', 'completed')
+                        ->orWhere('status', 'cancelled');
+                }))
             ->when($request->filled('search'), function ($query) use ($request) {
                 $query->where(function ($query) use ($request) {
                     $query->where('title', 'like', '%' . $request->search . '%')
@@ -24,133 +39,80 @@ class EventController extends Controller
             ->when($request->filled('category'), function ($query) use ($request) {
                 $query->where('category', $request->category);
             })
-            ->latest('opened_at')
-            ->paginate(10)
+            ->latest('published_at')
+            ->latest('event_date')
+            ->paginate(9)
             ->withQueryString();
 
         return view('events.index', [
             'events' => $events,
             'categories' => Event::categories(),
+            'isAdmin' => $isAdmin,
         ]);
-    }
-
-    /**
-     * Menampilkan halaman tambah event.
-     */
-    public function create()
-    {
-        return view('events.create', [
-            'categories' => Event::categories(),
-        ]);
-    }
-
-    /**
-     * Menyimpan event baru.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:200'],
-            'description' => ['nullable', 'string'],
-            'url' => ['nullable', 'url', 'max:255'],
-            'category' => [
-                'required',
-                Rule::in(array_keys(Event::categories())),
-            ],
-            'opened_at' => ['required', 'date'],
-            'closed_at' => ['required', 'date', 'after_or_equal:opened_at'],
-            'image' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png,webp',
-                'max:5120',
-            ],
-        ]);
-
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')
-                ->store('events', 'public');
-        }
-
-        Event::create($validated);
-
-        return redirect()
-            ->route('events.index')
-            ->with('success', 'Event berhasil ditambahkan.');
     }
 
     /**
      * Menampilkan detail event.
      * Untuk saat ini diarahkan kembali ke daftar event.
      */
-    public function show(Event $event)
+    public function show(Request $request, Event $event): View
     {
-        return redirect()->route('events.index');
-    }
+        abort_if($event->status === 'draft' && ! $this->isAdmin($request), 404);
 
-    /**
-     * Menampilkan halaman edit event.
-     */
-    public function edit(Event $event)
-    {
-        return view('events.edit', [
+        $event->loadCount(['followers', 'reviews'])
+            ->loadAvg('reviews', 'rating')
+            ->load(['reviews' => fn ($query) => $query->with('user')->latest()]);
+
+        return view('events.show', [
             'event' => $event,
-            'categories' => Event::categories(),
+            'isAdmin' => $this->isAdmin($request),
+            'isFollowing' => $event->followers()->where('user_id', $request->user()->id)->exists(),
+            'userReview' => $event->reviews->firstWhere('user_id', $request->user()->id),
+            'canReview' => $event->schedule_end?->isPast() || $event->status === 'completed',
         ]);
     }
 
-    /**
-     * Memperbarui event.
-     */
-    public function update(Request $request, Event $event)
+    public function toggleFollow(Request $request, Event $event): RedirectResponse
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:200'],
-            'description' => ['nullable', 'string'],
-            'url' => ['nullable', 'url', 'max:255'],
-            'category' => [
-                'required',
-                Rule::in(array_keys(Event::categories())),
-            ],
-            'opened_at' => ['required', 'date'],
-            'closed_at' => ['required', 'date', 'after_or_equal:opened_at'],
-            'image' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png,webp',
-                'max:5120',
-            ],
-        ]);
+        DB::transaction(function () use ($request, $event): void {
+            $follower = $event->followers()->where('user_id', $request->user()->id)->first();
 
-        if ($request->hasFile('image')) {
-            if ($event->image) {
-                Storage::disk('public')->delete($event->image);
+            if ($follower) {
+                $follower->delete();
+            } else {
+                $event->followers()->create(['user_id' => $request->user()->id]);
             }
+        });
 
-            $validated['image'] = $request->file('image')
-                ->store('events', 'public');
-        }
-
-        $event->update($validated);
-
-        return redirect()
-            ->route('events.index')
-            ->with('success', 'Event berhasil diperbarui.');
+        return back()->with('success', 'Status keikutsertaan berhasil diperbarui.');
     }
 
-    /**
-     * Menghapus event.
-     */
-    public function destroy(Event $event)
+    public function saveReview(Request $request, Event $event): RedirectResponse
     {
-        if ($event->image) {
-            Storage::disk('public')->delete($event->image);
-        }
+        abort_unless($event->schedule_end?->isPast() || $event->status === 'completed', 403);
 
-        $event->delete();
+        $request->merge(['review' => trim((string) $request->input('review'))]);
 
-        return redirect()
-            ->route('events.index')
-            ->with('success', 'Event berhasil dihapus.');
+        $validated = $request->validate([
+            'rating' => ['required', 'integer', 'between:1,5'],
+            'review' => ['required', 'string', 'min:2', 'max:2000'],
+        ]);
+
+        DB::transaction(function () use ($request, $event, $validated): void {
+            $event->reviews()->updateOrCreate(
+                ['user_id' => $request->user()->id],
+                $validated,
+            );
+        });
+
+        return back()->with('success', 'Review berhasil disimpan.');
+    }
+
+    private function isAdmin(Request $request): bool
+    {
+        return in_array($request->user()?->role, [
+            UserRole::SuperAdmin,
+            UserRole::Admin,
+        ], true);
     }
 }

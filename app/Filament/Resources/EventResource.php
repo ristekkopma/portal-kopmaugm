@@ -37,19 +37,26 @@ class EventResource extends Resource
                         Forms\Components\TextInput::make('title')
                             ->label('Judul Event')
                             ->required()
-                            ->maxLength(200),
-
-                        Forms\Components\Textarea::make('description')
-                            ->label('Keterangan Event')
-                            ->rows(4)
+                            ->maxLength(200)
                             ->columnSpanFull(),
 
-                        Forms\Components\TextInput::make('url')
-                            ->label('Link Event atau Pendaftaran')
-                            ->url()
-                            ->placeholder('https://contoh-link.com')
-                            ->prefixIcon('heroicon-s-link')
-                            ->helperText('Kosongkan jika event tidak memiliki link tambahan.'),
+                        Forms\Components\TextInput::make('organizer_name')
+                            ->label('Nama Penyelenggara')
+                            ->default('Kopma UGM')
+                            ->maxLength(255),
+
+                        Forms\Components\FileUpload::make('organizer_logo')
+                            ->label('Logo Penyelenggara')
+                            ->image()
+                            ->disk('public')
+                            ->directory('events/organizers')
+                            ->visibility('public')
+                            ->maxSize(2048),
+
+                        Forms\Components\Textarea::make('description')
+                            ->label('Deskripsi Lengkap')
+                            ->rows(6)
+                            ->columnSpanFull(),
 
                         Forms\Components\Select::make('category')
                             ->label('Kategori Event')
@@ -61,30 +68,103 @@ class EventResource extends Resource
                             ->default('bulanan')
                             ->required(),
 
-                        Forms\Components\FileUpload::make('image')
-                            ->label('Gambar Event')
+                        Forms\Components\Select::make('status')
+                            ->label('Status Publikasi')
+                            ->options([
+                                'draft' => 'Draft',
+                                'published' => 'Published',
+                                'ongoing' => 'Ongoing',
+                                'completed' => 'Completed',
+                                'cancelled' => 'Cancelled',
+                            ])
+                            ->default('published')
+                            ->required(),
+
+                        Forms\Components\FileUpload::make('thumbnail')
+                            ->label('Thumbnail Card')
                             ->image()
                             ->disk('public')
-                            ->directory('events')
+                            ->directory('events/thumbnails')
+                            ->visibility('public')
+                            ->imageEditor()
+                            ->maxSize(5120),
+
+                        Forms\Components\FileUpload::make('banner')
+                            ->label('Banner Detail')
+                            ->image()
+                            ->disk('public')
+                            ->directory('events/banners')
                             ->visibility('public')
                             ->imageEditor()
                             ->maxSize(5120)
-                            ->helperText('Format JPG, JPEG, PNG, atau WEBP. Maksimal 5 MB.'),
+                            ->helperText('JPG, JPEG, PNG, atau WEBP. Maksimal 5 MB.'),
+
+                        Forms\Components\DateTimePicker::make('published_at')
+                            ->label('Waktu Publikasi')
+                            ->seconds(false)
+                            ->default(now()),
                     ])
                     ->columns(2),
 
                 Forms\Components\Section::make('Jadwal Event')
                     ->schema([
-                        Forms\Components\DateTimePicker::make('opened_at')
-                            ->label('Tanggal dan Jam Mulai')
+                        Forms\Components\DatePicker::make('event_date')
+                            ->label('Tanggal Pelaksanaan')
+                            ->required(),
+
+                        Forms\Components\TimePicker::make('start_time')
+                            ->label('Jam Mulai')
                             ->seconds(false)
                             ->required(),
 
-                        Forms\Components\DateTimePicker::make('closed_at')
-                            ->label('Tanggal dan Jam Selesai')
+                        Forms\Components\TimePicker::make('end_time')
+                            ->label('Jam Selesai')
                             ->seconds(false)
-                            ->afterOrEqual('opened_at')
+                            ->afterOrEqual('start_time')
                             ->required(),
+
+                        Forms\Components\Select::make('event_type')
+                            ->label('Jenis Event')
+                            ->options([
+                                'offline' => 'Offline',
+                                'online' => 'Online',
+                                'hybrid' => 'Hybrid',
+                            ])
+                            ->default('offline')
+                            ->required(),
+
+                        Forms\Components\TextInput::make('location')
+                            ->label('Lokasi atau Link Pertemuan')
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+
+                        Forms\Components\DateTimePicker::make('registration_deadline')
+                            ->label('Batas Pendaftaran')
+                            ->seconds(false),
+
+                        Forms\Components\TextInput::make('contact_person')
+                            ->label('Narahubung')
+                            ->maxLength(255),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Pendaftaran dan Informasi Tambahan')
+                    ->schema([
+                        Forms\Components\TextInput::make('registration_url')
+                            ->label('Link Pendaftaran Google Form')
+                            ->url()
+                            ->prefixIcon('heroicon-o-link')
+                            ->placeholder('https://forms.gle/...')
+                            ->helperText('Disarankan menggunakan forms.gle atau docs.google.com/forms.')
+                            ->columnSpanFull(),
+
+                        Forms\Components\Textarea::make('rundown')
+                            ->label('Rundown / Informasi Tambahan')
+                            ->rows(6),
+
+                        Forms\Components\Textarea::make('terms')
+                            ->label('Syarat dan Ketentuan')
+                            ->rows(6),
                     ])
                     ->columns(2),
             ]);
@@ -95,9 +175,10 @@ class EventResource extends Resource
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
-                Tables\Columns\ImageColumn::make('image')
+                Tables\Columns\ImageColumn::make('thumbnail')
                     ->label('Gambar')
                     ->disk('public')
+                    ->getStateUsing(fn (Event $record): ?string => $record->thumbnail ?: $record->banner ?: $record->image)
                     ->square(),
 
                 Tables\Columns\TextColumn::make('title')
@@ -118,14 +199,22 @@ class EventResource extends Resource
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('opened_at')
-                    ->label('Mulai')
-                    ->dateTime('d M Y, H:i')
+                Tables\Columns\TextColumn::make('event_date')
+                    ->label('Tanggal Event')
+                    ->date('d M Y')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('closed_at')
-                    ->label('Selesai')
-                    ->dateTime('d M Y, H:i')
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->getStateUsing(fn (Event $record): string => $record->status_label)
+                    ->badge()
+                    ->color(fn (Event $record): string => match ($record->status_color) {
+                        'green' => 'success',
+                        'red' => 'danger',
+                        'orange' => 'warning',
+                        'blue' => 'info',
+                        default => 'gray',
+                    })
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')

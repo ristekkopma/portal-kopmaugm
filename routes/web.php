@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\UserRole;
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,13 +18,9 @@ Route::get('/health', function () {
     ]);
 })->name('health');
 
-Route::get('/events', function () {
-    $route = in_array(auth()->user()->role, [
-        UserRole::SuperAdmin,
-        UserRole::Admin,
-    ], true)
-        ? 'filament.admin.resources.events.index'
-        : 'filament.portal.resources.events.index';
-
-    return redirect()->route($route);
-})->middleware('auth')->name('events.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/events', [EventController::class, 'index'])->name('events.index');
+    Route::get('/event/{event:slug}', [EventController::class, 'show'])->name('events.show');
+    Route::post('/event/{event:slug}/follow', [EventController::class, 'toggleFollow'])->name('events.follow');
+    Route::post('/event/{event:slug}/review', [EventController::class, 'saveReview'])->name('events.review');
+});

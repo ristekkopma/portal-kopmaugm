@@ -90,4 +90,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     {
         return $this->hasMany(SavingCycleMember::class);
     }
+
+    public function followedEvents(): HasMany
+    {
+        return $this->hasMany(EventFollower::class);
+    }
+
+    public function eventReviews(): HasMany
+    {
+        return $this->hasMany(EventReview::class);
+    }
 }

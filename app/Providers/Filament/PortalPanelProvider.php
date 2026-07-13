@@ -49,10 +49,7 @@ class PortalPanelProvider extends PanelProvider
                 NavigationItem::make('Events')
                     ->url(fn (): string => route('events.index'))
                     ->icon('heroicon-o-calendar-days')
-                    ->isActiveWhen(fn (): bool => request()->routeIs([
-                        'events.*',
-                        'filament.portal.resources.events.*',
-                    ]))
+                    ->isActiveWhen(fn (): bool => request()->routeIs('events.*'))
                     ->sort(1),
             ])
 
