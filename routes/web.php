@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventFollowerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,3 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/event/{event:slug}/follow', [EventController::class, 'toggleFollow'])->name('events.follow');
     Route::post('/event/{event:slug}/review', [EventController::class, 'saveReview'])->name('events.review');
 });
+
+Route::get('/event-followers/export.csv', [EventFollowerController::class, 'export'])
+    ->middleware(['auth', 'can:export_event_followers'])
+    ->name('admin.event-followers.export');

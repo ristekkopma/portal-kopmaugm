@@ -76,6 +76,12 @@ class Event extends Model
         return $this->hasMany(EventFollower::class);
     }
 
+    public function activeFollowers(): HasMany
+    {
+        return $this->hasMany(EventFollower::class)
+            ->where('status', '!=', 'cancelled');
+    }
+
     public function interestedUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'event_followers')->withTimestamps();

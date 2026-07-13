@@ -90,6 +90,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'Membership',
+                'Manajemen Event',
                 'Management',
                 'Finance',
                 'Library',

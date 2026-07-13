@@ -18,7 +18,7 @@ class EventResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
-    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationGroup = 'Manajemen Event';
 
     protected static ?string $navigationLabel = 'Events';
 
@@ -217,6 +217,24 @@ class EventResource extends Resource
                     })
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('interested_total')
+                    ->label('Total Peminat')
+                    ->suffix(' orang')
+                    ->url(fn (Event $record): ?string => auth()->user()->can('view_event_followers')
+                        ? route('filament.admin.resources.event-followers.index', [
+                            'tableFilters' => ['event_id' => ['value' => $record->id]],
+                        ])
+                        : null)
+                    ->color('primary'),
+
+                Tables\Columns\TextColumn::make('registered_total')
+                    ->label('Terdaftar')
+                    ->suffix(' orang'),
+
+                Tables\Columns\TextColumn::make('attended_total')
+                    ->label('Hadir')
+                    ->suffix(' orang'),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y, H:i')
@@ -235,6 +253,18 @@ class EventResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\Action::make('followers')
+                    ->label('Lihat Peminat')
+                    ->icon('heroicon-o-user-group')
+                    ->url(fn (Event $record): string => route('filament.admin.resources.event-followers.index', [
+                        'tableFilters' => ['event_id' => ['value' => $record->id]],
+                    ]))
+                    ->visible(fn (): bool => auth()->user()->can('view_event_followers')),
+                Tables\Actions\Action::make('exportFollowers')
+                    ->label('Export Peminat')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->url(fn (Event $record): string => route('admin.event-followers.export', ['event_id' => $record->id]))
+                    ->visible(fn (): bool => auth()->user()->can('export_event_followers')),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
@@ -252,6 +282,11 @@ class EventResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->withCount([
+                'activeFollowers as interested_total',
+                'followers as registered_total' => fn (Builder $query) => $query->where('status', 'registered'),
+                'followers as attended_total' => fn (Builder $query) => $query->where('status', 'attended'),
+            ])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

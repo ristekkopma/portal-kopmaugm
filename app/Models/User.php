@@ -23,6 +23,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     'password',
     'avatar',
     'role',
+    'can_manage_event_followers',
     'is_verified', // ✅ ini penting supaya update bisa dilakukan
 ];
 
@@ -37,6 +38,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return [
             'password' => 'hashed',
             'role' => UserRole::class,
+            'can_manage_event_followers' => 'boolean',
             'is_verified' => 'boolean', // ✅ Tambahkan agar mudah dipakai logika
         ];
     }

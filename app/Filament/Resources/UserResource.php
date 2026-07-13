@@ -73,7 +73,12 @@ class UserResource extends Resource
                     Forms\Components\Section::make([
                         Forms\Components\Select::make('role')
                             ->options(UserRole::class)
-                            ->preload()
+                            ->preload(),
+
+                        Forms\Components\Toggle::make('can_manage_event_followers')
+                            ->label('Izin Kelola Peminat Event')
+                            ->helperText('Memberikan akses identitas, status, dan export peminat event kepada Admin.')
+                            ->visible(fn (Forms\Get $get): bool => in_array($get('role'), [UserRole::Admin, UserRole::Admin->value], true))
                     ])
                 ])->columnSpan(2),
                 Forms\Components\Group::make([

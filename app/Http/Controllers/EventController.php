@@ -19,7 +19,7 @@ class EventController extends Controller
         $isAdmin = $this->isAdmin($request);
 
         $events = Event::query()
-            ->withCount(['followers', 'reviews'])
+            ->withCount(['activeFollowers as followers_count', 'reviews'])
             ->withAvg('reviews', 'rating')
             ->when(! $isAdmin, fn ($query) => $query
                 ->where('status', '!=', 'draft')
@@ -59,14 +59,14 @@ class EventController extends Controller
     {
         abort_if($event->status === 'draft' && ! $this->isAdmin($request), 404);
 
-        $event->loadCount(['followers', 'reviews'])
+        $event->loadCount(['activeFollowers as followers_count', 'reviews'])
             ->loadAvg('reviews', 'rating')
             ->load(['reviews' => fn ($query) => $query->with('user')->latest()]);
 
         return view('events.show', [
             'event' => $event,
             'isAdmin' => $this->isAdmin($request),
-            'isFollowing' => $event->followers()->where('user_id', $request->user()->id)->exists(),
+            'isFollowing' => $event->activeFollowers()->where('user_id', $request->user()->id)->exists(),
             'userReview' => $event->reviews->firstWhere('user_id', $request->user()->id),
             'canReview' => $event->schedule_end?->isPast() || $event->status === 'completed',
         ]);
@@ -75,12 +75,25 @@ class EventController extends Controller
     public function toggleFollow(Request $request, Event $event): RedirectResponse
     {
         DB::transaction(function () use ($request, $event): void {
-            $follower = $event->followers()->where('user_id', $request->user()->id)->first();
+            $follower = $event->followers()
+                ->withTrashed()
+                ->where('user_id', $request->user()->id)
+                ->first();
 
             if ($follower) {
-                $follower->delete();
+                if ($follower->trashed()) {
+                    $follower->restore();
+                    $follower->update(['status' => 'interested']);
+                } else {
+                    $follower->update([
+                        'status' => $follower->status === 'cancelled' ? 'interested' : 'cancelled',
+                    ]);
+                }
             } else {
-                $event->followers()->create(['user_id' => $request->user()->id]);
+                $event->followers()->create([
+                    'user_id' => $request->user()->id,
+                    'status' => 'interested',
+                ]);
             }
         });
 
