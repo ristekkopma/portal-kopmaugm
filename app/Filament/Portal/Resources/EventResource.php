@@ -9,6 +9,7 @@ use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\Layout\Stack;
@@ -94,12 +95,15 @@ class EventResource extends Resource
                 Tables\Actions\ViewAction::make()
                     ->label('Lihat Detail')
                     ->modalHeading(fn (Event $record): string => $record->title)
-                    ->modalWidth(MaxWidth::SevenExtraLarge)
+                    ->modalWidth(MaxWidth::FiveExtraLarge)
+                    ->modalFooterActionsAlignment(Alignment::Between)
+                    ->modalCancelAction(false)
                     ->stickyModalHeader()
                     ->stickyModalFooter()
                     ->closeModalByEscaping()
                     ->closeModalByClickingAway()
                     ->extraModalFooterActions([
+                        static::navigateAction('previous'),
                         static::followAction(),
                         static::registerAction(),
                         static::reviewAction(),
@@ -109,6 +113,7 @@ class EventResource extends Resource
                             ->extraAttributes(fn (Event $record): array => [
                                 'x-on:click' => 'navigator.clipboard.writeText('.json_encode(route('events.show', $record)).')',
                             ]),
+                        static::navigateAction('next'),
                     ]),
             ])
             ->bulkActions([])
@@ -206,6 +211,33 @@ class EventResource extends Resource
                 $record->refresh();
                 Notification::make()->title('Status keikutsertaan diperbarui')->success()->send();
             });
+    }
+
+    private static function navigateAction(string $direction): Tables\Actions\Action
+    {
+        $isPrevious = $direction === 'previous';
+
+        return Tables\Actions\Action::make('navigate_'.$direction)
+            ->label($isPrevious ? 'Event sebelumnya' : 'Event berikutnya')
+            ->icon($isPrevious ? 'heroicon-o-chevron-left' : 'heroicon-o-chevron-right')
+            ->iconButton()
+            ->tooltip($isPrevious ? 'Event sebelumnya' : 'Event berikutnya')
+            ->color('gray')
+            ->visible(fn (Event $record): bool => static::adjacentEvent($record, $direction) !== null)
+            ->action(function (Event $record, $livewire) use ($direction): void {
+                if ($target = static::adjacentEvent($record, $direction)) {
+                    $livewire->replaceMountedTableAction('view', $target->getRouteKey());
+                }
+            });
+    }
+
+    private static function adjacentEvent(Event $record, string $direction): ?Event
+    {
+        return Event::query()
+            ->where('status', '!=', 'draft')
+            ->where('id', $direction === 'previous' ? '>' : '<', $record->id)
+            ->orderBy('id', $direction === 'previous' ? 'asc' : 'desc')
+            ->first();
     }
 
     private static function registerAction(): Tables\Actions\Action
