@@ -38,7 +38,7 @@ class EventResource extends Resource
             ->columns([
                 Stack::make([
                     Tables\Columns\ImageColumn::make('banner')
-                        ->hiddenLabel()
+                        ->label('Banner')
                         ->disk('public')
                         ->getStateUsing(fn (Event $record): ?string => $record->thumbnail ?: $record->banner ?: $record->image)
                         ->height('13rem')
