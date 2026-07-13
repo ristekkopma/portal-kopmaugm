@@ -1,4 +1,4 @@
 ---
 deployment:
   tasks:
-    - "/bin/bash -lc 'cd /home/u1656986/public_html/repositories/portal-kopmaugm.com && php artisan migrate --force && php artisan optimize:clear'"
+    - "/bin/bash -lc 'cd /home/u1656986/public_html/repositories/portal-kopmaugm.com && timeout 300 php artisan migrate --force --no-interaction && php artisan optimize:clear'"
