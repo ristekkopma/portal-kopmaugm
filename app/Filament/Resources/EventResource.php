@@ -38,6 +38,8 @@ class EventResource extends Resource
                             ->label('Judul Event')
                             ->required()
                             ->maxLength(200)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($livewire) => method_exists($livewire, 'invalidateRecipientVerification') ? $livewire->invalidateRecipientVerification() : null)
                             ->columnSpanFull(),
 
                         Forms\Components\TextInput::make('organizer_name')
@@ -110,16 +112,22 @@ class EventResource extends Resource
                     ->schema([
                         Forms\Components\DatePicker::make('event_date')
                             ->label('Tanggal Pelaksanaan')
+                            ->live()
+                            ->afterStateUpdated(fn ($livewire) => method_exists($livewire, 'invalidateRecipientVerification') ? $livewire->invalidateRecipientVerification() : null)
                             ->required(),
 
                         Forms\Components\TimePicker::make('start_time')
                             ->label('Jam Mulai')
                             ->seconds(false)
+                            ->live()
+                            ->afterStateUpdated(fn ($livewire) => method_exists($livewire, 'invalidateRecipientVerification') ? $livewire->invalidateRecipientVerification() : null)
                             ->required(),
 
                         Forms\Components\TimePicker::make('end_time')
                             ->label('Jam Selesai')
                             ->seconds(false)
+                            ->live()
+                            ->afterStateUpdated(fn ($livewire) => method_exists($livewire, 'invalidateRecipientVerification') ? $livewire->invalidateRecipientVerification() : null)
                             ->afterOrEqual('start_time')
                             ->required(),
 
@@ -136,6 +144,8 @@ class EventResource extends Resource
                         Forms\Components\TextInput::make('location')
                             ->label('Lokasi atau Link Pertemuan')
                             ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($livewire) => method_exists($livewire, 'invalidateRecipientVerification') ? $livewire->invalidateRecipientVerification() : null)
                             ->columnSpanFull(),
 
                         Forms\Components\DateTimePicker::make('registration_deadline')
@@ -156,6 +166,8 @@ class EventResource extends Resource
                             ->prefixIcon('heroicon-o-link')
                             ->placeholder('https://forms.gle/...')
                             ->helperText('Disarankan menggunakan forms.gle atau docs.google.com/forms.')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($livewire) => method_exists($livewire, 'invalidateRecipientVerification') ? $livewire->invalidateRecipientVerification() : null)
                             ->columnSpanFull(),
 
                         Forms\Components\Textarea::make('rundown')
@@ -165,6 +177,48 @@ class EventResource extends Resource
                         Forms\Components\Textarea::make('terms')
                             ->label('Syarat dan Ketentuan')
                             ->rows(6),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Notifikasi Email Event')
+                    ->description('Verifikasi seluruh penerima sebelum Event disimpan dan email dimasukkan ke antrean.')
+                    ->visible(fn (string $operation): bool => $operation === 'create' && auth()->user()->can('send_event_notifications'))
+                    ->schema([
+                        Forms\Components\Toggle::make('notify_members')
+                            ->label('Kirim notifikasi Event kepada anggota')
+                            ->live()
+                            ->dehydrated(false),
+                        Forms\Components\TextInput::make('spreadsheet_url')
+                            ->label('URL Google Spreadsheet / CSV')
+                            ->url()
+                            ->required(fn (Forms\Get $get): bool => (bool) $get('notify_members'))
+                            ->visible(fn (Forms\Get $get): bool => (bool) $get('notify_members'))
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($livewire) => $livewire->invalidateRecipientVerification())
+                            ->dehydrated(false)
+                            ->columnSpanFull(),
+                        Forms\Components\Textarea::make('notification_summary')
+                            ->label('Ringkasan dalam Email')
+                            ->rows(3)
+                            ->maxLength(1000)
+                            ->visible(fn (Forms\Get $get): bool => (bool) $get('notify_members'))
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($livewire) => $livewire->invalidateRecipientVerification())
+                            ->dehydrated(false)
+                            ->columnSpanFull(),
+                        Forms\Components\Actions::make([
+                            Forms\Components\Actions\Action::make('verifyRecipients')
+                                ->label('Verifikasi Penerima')
+                                ->icon('heroicon-o-check-badge')
+                                ->action(fn ($livewire) => $livewire->verifyRecipients()),
+                        ])
+                            ->key('event-recipient-verification-actions')
+                            ->visible(fn (Forms\Get $get): bool => (bool) $get('notify_members')),
+                        Forms\Components\ViewField::make('recipient_preview')
+                            ->view('filament.forms.components.event-recipient-preview')
+                            ->visible(fn ($livewire): bool => ! empty($livewire->recipientVerification))
+                            ->dehydrated(false)
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
             ]);

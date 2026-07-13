@@ -15,7 +15,9 @@ class Event extends Model
     use SoftDeletes;
 
     public const CATEGORY_URGENT = 'urgent';
+
     public const CATEGORY_BULANAN = 'bulanan';
+
     public const CATEGORY_TAHUNAN = 'tahunan';
 
     protected $fillable = [
@@ -92,6 +94,11 @@ class Event extends Model
         return $this->hasMany(EventReview::class)->latest();
     }
 
+    public function notificationBatches(): HasMany
+    {
+        return $this->hasMany(EventNotificationBatch::class);
+    }
+
     public function getRouteKeyName(): string
     {
         return 'slug';
@@ -101,13 +108,13 @@ class Event extends Model
     {
         $path = $this->banner ?: $this->thumbnail ?: $this->image;
 
-        return $path ? asset('storage/' . $path) : asset('images/logo.png');
+        return $path ? asset('storage/'.$path) : asset('images/logo.png');
     }
 
     public function getDisplayOrganizerLogoAttribute(): string
     {
         return $this->organizer_logo
-            ? asset('storage/' . $this->organizer_logo)
+            ? asset('storage/'.$this->organizer_logo)
             : asset('images/logo.png');
     }
 
@@ -125,7 +132,7 @@ class Event extends Model
     public function getScheduleStartAttribute(): ?Carbon
     {
         if ($this->event_date && $this->start_time) {
-            return Carbon::parse($this->event_date->format('Y-m-d') . ' ' . $this->start_time);
+            return Carbon::parse($this->event_date->format('Y-m-d').' '.$this->start_time);
         }
 
         return $this->opened_at ?: ($this->event_date?->startOfDay());
@@ -134,7 +141,7 @@ class Event extends Model
     public function getScheduleEndAttribute(): ?Carbon
     {
         if ($this->event_date && $this->end_time) {
-            return Carbon::parse($this->event_date->format('Y-m-d') . ' ' . $this->end_time);
+            return Carbon::parse($this->event_date->format('Y-m-d').' '.$this->end_time);
         }
 
         return $this->closed_at ?: ($this->event_date?->endOfDay());
@@ -191,7 +198,7 @@ class Event extends Model
             ->where('slug', $slug)
             ->when($ignoreId, fn (Builder $query) => $query->where('id', '!=', $ignoreId))
             ->exists()) {
-            $slug = $base . '-' . $counter++;
+            $slug = $base.'-'.$counter++;
         }
 
         return $slug;

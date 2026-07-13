@@ -17,16 +17,16 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     use HasFactory, Notifiable;
 
     protected $fillable = [
-    'name',
-    'email',
-    'phone',
-    'password',
-    'avatar',
-    'role',
-    'can_manage_event_followers',
-    'is_verified', // ✅ ini penting supaya update bisa dilakukan
-];
-
+        'name',
+        'email',
+        'phone',
+        'password',
+        'avatar',
+        'role',
+        'can_manage_event_followers',
+        'can_send_event_notifications',
+        'is_verified', // ✅ ini penting supaya update bisa dilakukan
+    ];
 
     protected $hidden = [
         'password',
@@ -39,6 +39,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             'password' => 'hashed',
             'role' => UserRole::class,
             'can_manage_event_followers' => 'boolean',
+            'can_send_event_notifications' => 'boolean',
             'is_verified' => 'boolean', // ✅ Tambahkan agar mudah dipakai logika
         ];
     }
@@ -69,7 +70,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar ? asset('storage/' . $this->avatar) : null;
+        return $this->avatar ? asset('storage/'.$this->avatar) : null;
     }
 
     // === RELASI ===

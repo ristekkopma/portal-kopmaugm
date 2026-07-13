@@ -3,27 +3,27 @@
 namespace App\Filament\Resources;
 
 use App\Enums\UserRole;
-use Filament\Forms;
-use App\Models\User;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Filament\Forms\FormsComponent;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\Rules\Password;
 use App\Filament\Components as AppComponents;
 use App\Filament\Resources\UserResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\User;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-users';
+
     protected static ?string $navigationGroup = 'User';
+
     protected static ?string $navigationLabel = 'System';
+
     protected static ?string $navigationGroupShort = '6';
 
     public static function form(Form $form): Form
@@ -59,15 +59,15 @@ class UserResource extends Resource
                                 ->revealable(filament()->arePasswordsRevealable())
                                 ->rule(Password::default())
                                 ->autocomplete('new-password')
-                                ->dehydrated(fn($state): bool => filled($state))
-                                ->dehydrateStateUsing(fn($state): string => Hash::make($state))
+                                ->dehydrated(fn ($state): bool => filled($state))
+                                ->dehydrateStateUsing(fn ($state): string => Hash::make($state))
                                 ->live(debounce: 500)
                                 ->same('passwordConfirmation'),
                             Forms\Components\TextInput::make('passwordConfirmation')
                                 ->password()
                                 ->revealable(filament()->arePasswordsRevealable())
                                 ->required()
-                                ->visible(fn(Forms\Get $get): bool => filled($get('password')))
+                                ->visible(fn (Forms\Get $get): bool => filled($get('password')))
                                 ->dehydrated(false),
                         ]),
                     Forms\Components\Section::make([
@@ -78,72 +78,68 @@ class UserResource extends Resource
                         Forms\Components\Toggle::make('can_manage_event_followers')
                             ->label('Izin Kelola Peminat Event')
                             ->helperText('Memberikan akses identitas, status, dan export peminat event kepada Admin.')
-                            ->visible(fn (Forms\Get $get): bool => in_array($get('role'), [UserRole::Admin, UserRole::Admin->value], true))
-                    ])
+                            ->visible(fn (Forms\Get $get): bool => in_array($get('role'), [UserRole::Admin, UserRole::Admin->value], true)),
+
+                        Forms\Components\Toggle::make('can_send_event_notifications')
+                            ->label('Izin Kirim Notifikasi Event')
+                            ->helperText('Memberikan akses verifikasi spreadsheet dan pengiriman email Event kepada Admin.')
+                            ->visible(fn (Forms\Get $get): bool => in_array($get('role'), [UserRole::Admin, UserRole::Admin->value], true)),
+                    ]),
                 ])->columnSpan(2),
                 Forms\Components\Group::make([
                     Forms\Components\Section::make([
                         Forms\Components\DateTimePicker::make('email_verified_at'),
                     ]),
-                    AppComponents\Forms\TimestampPlaceholder::make()
-                ])
+                    AppComponents\Forms\TimestampPlaceholder::make(),
+                ]),
             ]);
     }
 
     public static function table(Table $table): Table
-{
-    return $table
-        ->defaultSort('created_at', 'desc')
-        ->columns([
-            AppComponents\Columns\IDColumn::make(),
-            Tables\Columns\TextColumn::make('name')
-                ->translateLabel()
-                ->searchable(),
-            AppComponents\Columns\WhatsappLinkColumn::make(),
-            Tables\Columns\TextColumn::make('email')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('role')
-                ->badge()
-                ->searchable(),
+    {
+        return $table
+            ->defaultSort('created_at', 'desc')
+            ->columns([
+                AppComponents\Columns\IDColumn::make(),
+                Tables\Columns\TextColumn::make('name')
+                    ->translateLabel()
+                    ->searchable(),
+                AppComponents\Columns\WhatsappLinkColumn::make(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('role')
+                    ->badge()
+                    ->searchable(),
 
-           
-            AppComponents\Columns\LastModifiedColumn::make(),
-            AppComponents\Columns\CreatedAtColumn::make(),
-        ])
-        ->filters([
-            //
-        ])
-        ->actions([
-    
+                AppComponents\Columns\LastModifiedColumn::make(),
+                AppComponents\Columns\CreatedAtColumn::make(),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                // 🔹 Kolom gabungan: tombol Verifikasi / ikon centang
+                Tables\Actions\Action::make('verifikasi')
+                    ->label(fn ($record) => $record->is_verified ? 'Done' : 'Check')
+                    ->icon(fn ($record) => $record->is_verified ? 'heroicon-o-check-circle' : 'heroicon-o-clock')
+                    ->color(fn ($record) => $record->is_verified ? 'success' : 'warning')
+                    ->disabled(fn ($record) => $record->is_verified) // kalau sudah diverifikasi, nonaktifkan tombol
+                    ->requiresConfirmation(fn ($record) => ! $record->is_verified)
+                    ->visible(fn ($record) => true) // tampil selalu
+                    ->action(function ($record) {
+                        if (! $record->is_verified) {
+                            $record->update(['is_verified' => true]);
 
-    // 🔹 Kolom gabungan: tombol Verifikasi / ikon centang
-    Tables\Actions\Action::make('verifikasi')
-        ->label(fn ($record) => $record->is_verified ? 'Done' : 'Check')
-        ->icon(fn ($record) => $record->is_verified ? 'heroicon-o-check-circle' : 'heroicon-o-clock')
-        ->color(fn ($record) => $record->is_verified ? 'success' : 'warning')
-        ->disabled(fn ($record) => $record->is_verified) // kalau sudah diverifikasi, nonaktifkan tombol
-        ->requiresConfirmation(fn ($record) => ! $record->is_verified)
-        ->visible(fn ($record) => true) // tampil selalu
-        ->action(function ($record) {
-            if (! $record->is_verified) {
-                $record->update(['is_verified' => true]);
-
-                \Filament\Notifications\Notification::make()
-                    ->title('User berhasil diverifikasi')
-                    ->body("Akun {$record->name} sekarang sudah aktif dan dapat login.")
-                    ->success()
-                    ->send();
-            }
-        }),
-        Tables\Actions\EditAction::make(),
-
-   ])
-
-   
-;
-
-}
-
+                            \Filament\Notifications\Notification::make()
+                                ->title('User berhasil diverifikasi')
+                                ->body("Akun {$record->name} sekarang sudah aktif dan dapat login.")
+                                ->success()
+                                ->send();
+                        }
+                    }),
+                Tables\Actions\EditAction::make(),
+            ]);
+    }
 
     public static function getRelations(): array
     {
