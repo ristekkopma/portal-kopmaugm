@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,6 +17,6 @@ Route::get('/health', function () {
     ]);
 })->name('health');
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('events', EventController::class)->except('show');
-});
+Route::get('/events', function () {
+    return redirect()->route('filament.admin.resources.events.index');
+})->middleware('auth')->name('events.index');

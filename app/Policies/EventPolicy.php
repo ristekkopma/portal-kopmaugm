@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Enums\UserRole;
 use App\Models\Event;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class EventPolicy
 {
@@ -14,7 +13,7 @@ class EventPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->role === UserRole::SuperAdmin && $user->role === UserRole::Admin;
+        return $this->isAdmin($user);
     }
 
     /**
@@ -22,7 +21,7 @@ class EventPolicy
      */
     public function view(User $user, Event $event): bool
     {
-        return $user->role === UserRole::SuperAdmin && $user->role === UserRole::Admin;
+        return $this->isAdmin($user);
     }
 
     /**
@@ -30,7 +29,7 @@ class EventPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role === UserRole::SuperAdmin && $user->role === UserRole::Admin;
+        return $this->isAdmin($user);
     }
 
     /**
@@ -38,7 +37,7 @@ class EventPolicy
      */
     public function update(User $user, Event $event): bool
     {
-        return $user->role === UserRole::SuperAdmin && $user->role === UserRole::Admin;
+        return $this->isAdmin($user);
     }
 
     /**
@@ -46,7 +45,7 @@ class EventPolicy
      */
     public function delete(User $user, Event $event): bool
     {
-        return $user->role === UserRole::SuperAdmin && $user->role === UserRole::Admin;
+        return $this->isAdmin($user);
     }
 
     /**
@@ -54,7 +53,7 @@ class EventPolicy
      */
     public function restore(User $user, Event $event): bool
     {
-        return $user->role === UserRole::SuperAdmin && $user->role === UserRole::Admin;
+        return $this->isAdmin($user);
     }
 
     /**
@@ -62,6 +61,14 @@ class EventPolicy
      */
     public function forceDelete(User $user, Event $event): bool
     {
-        return $user->role === UserRole::SuperAdmin && $user->role === UserRole::Admin;
+        return $this->isAdmin($user);
+    }
+
+    private function isAdmin(User $user): bool
+    {
+        return in_array($user->role, [
+            UserRole::SuperAdmin,
+            UserRole::Admin,
+        ], true);
     }
 }
