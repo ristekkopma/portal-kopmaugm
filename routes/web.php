@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\UserRole;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,5 +19,12 @@ Route::get('/health', function () {
 })->name('health');
 
 Route::get('/events', function () {
-    return redirect()->route('filament.admin.resources.events.index');
+    $route = in_array(auth()->user()->role, [
+        UserRole::SuperAdmin,
+        UserRole::Admin,
+    ], true)
+        ? 'filament.admin.resources.events.index'
+        : 'filament.portal.resources.events.index';
+
+    return redirect()->route($route);
 })->middleware('auth')->name('events.index');
