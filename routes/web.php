@@ -19,6 +19,5 @@ Route::get('/health', function () {
 })->name('health');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/events', [EventController::class, 'index'])
-        ->name('events.index');
+    Route::resource('events', EventController::class)->except('show');
 });
